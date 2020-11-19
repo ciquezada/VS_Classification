@@ -1,3 +1,3 @@
-# VS_Classifcation
+# VS_Classification
 
 Para clasificar estrellitas
