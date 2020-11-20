@@ -1,4 +1,4 @@
-Adapter Ks_metalicity by Felipe Gran on python 3.7+
+Adapter Ks_metalicity on python 3.7+
 
 Command to run the code:
   python adapter_Ks_metallicity.py number_parallel_processes data_directory curves_file_path output_path
