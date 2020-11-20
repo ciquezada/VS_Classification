@@ -16,7 +16,7 @@ Args:
     output_file (str): path to output Dataframe file returned by pyfiner
 
 Raises:
-    bunch of warnings
+    bunch of inofesive warnings
 
 Returns:
     output_df (DataFrame): metallicity output returned by pyfiner
@@ -37,17 +37,21 @@ if __name__=="__main__":
     output_file = sys.argv[4]
     # load curve file and then prepare input file
     curves_df = pd.read_csv(curves_file, sep=" ")
-    input_df = curves_df[["vvv", "aov1"]]
+    input_df = curves_df[["vvv", "aov1"]].copy()
     input_df["ks"] = curves_df.vvv.apply(lambda x:
                                     curves_dir + os.sep + x + ".dat")
     input_df["j"] = "j" + os.sep + "j_empty.dat"
     input_df["h"] = "h" + os.sep + "h_empty.dat"
     input_df["output_pdf"] = curves_df.vvv.apply(lambda x:
                                     "output_pdf" + os.sep + x + ".pdf")
-    # splitting input file
+    del(curves_df)
+    # making needed directories
     if not os.path.exists("temp"):
         os.system('mkdir temp')
-    chunksize = int(np.ceil(curves_df.shape[0]/num_proc))
+    if not os.path.exists("output_pdf"):
+        os.system('mkdir output_pdf')
+    # splitting input file
+    chunksize = int(np.ceil(input_df.shape[0]/num_proc))
     for i in range(num_proc):
         input_df.iloc[chunksize*i:chunksize*(i+1),:].to_csv(
                                     "temp" + os.sep + "input_{}.csv".format(i),
