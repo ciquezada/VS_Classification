@@ -15,7 +15,6 @@ class FeetsExtractorTestCase(unittest.TestCase):
                                                      True, 'output not created')
 
     def tearDown(self):
-        os.system('rm -r output_pdf')
         os.system("rm -r test" + os.sep + "test_output.csv")
 
 class FeetsExtractorParallelTestCase(unittest.TestCase):
@@ -31,7 +30,6 @@ class FeetsExtractorParallelTestCase(unittest.TestCase):
                                                      True, 'output not created')
 
     def tearDown(self):
-        os.system('rm -r output_pdf')
         os.system("rm -r test" + os.sep + "test_output.csv")
 
 if __name__=="__main__":
