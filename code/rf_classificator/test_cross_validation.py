@@ -43,7 +43,7 @@ def custom_plot_confusion_matrix(cm,
     plt.ylabel('Clase original', size = 17)
     plt.xlabel('Predicción', size = 17)
     plt.tight_layout()
-    
+
 
 def get_confusion_matrix(y_true, y_pred, labels):
     cnf_matrix_train = confusion_matrix(y_true, y_pred, labels = labels)
@@ -66,7 +66,7 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
     """
     kf = StratifiedShuffleSplit(n_splits=cv, test_size=0.3, random_state=1)
     kf.get_n_splits(X, Y)
-    
+
     ## preparacion para la matriz ###
     cm_list = []
     cm_list_train = []
@@ -78,29 +78,29 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
     ## Preparacion Feature imnportances ##
     feature_importances = 0
     ######################################
-    
+
     ## Y_PRED OUTPUT #####################
     y_pred_list = []
     ######################################
-    
+
     for train_index, test_index in kf.split(X, Y):
         x_train, x_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
-        
+
         model.fit(x_train, y_train)
         y_pred = model.predict(x_test)
         y_pred_train = model.predict(x_train)
-        
+
         ## armamos la matriz de confusion ################
         cm_list += [get_confusion_matrix(y_test, y_pred, labels)]                #testing set
         cm_list_train += [get_confusion_matrix(y_train, y_pred_train, labels)]   #trainning set
         ##################################################
-        
+
         ## armamos el clasifcaation_report ################
         cl_df += get_cl_report(y_test, y_pred, labels)
         cl_df_train += get_cl_report(y_train, y_pred_train, labels)
         ###################################################
-        
+
         ## Feature importances ###########################
         feature_importances += model.rf.feature_importances_
         ##################################################
@@ -110,11 +110,11 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
         ## Y_PRED_PROBA OUTPUT #################################
         y_pred_list[-1]["prob"] = model.predict_proba(x_test).set_index([y_test.index]).max(axis=1)
         #################################################
-        
-    
+
+
     ## plot_confusion #############################
     cm_average = sum(cm_list)/10
-    cm_average_train = sum(cm_list_train)/10 
+    cm_average_train = sum(cm_list_train)/10
     plt.figure(figsize=(12, 8))
     plt.tight_layout()
     custom_plot_confusion_matrix(cm_average, classes = labels, *args ,**kwargs)
@@ -129,7 +129,7 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
 #        plt.show()
         plt.close()
     ################################################
-      
+
     ## Terminamos de armar los clasification report ####
     cl_df["label"] = labels
     cl_df_train["label"] = labels
@@ -165,7 +165,7 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
     plt.savefig("importance.pdf")
 #    plt.show()
     plt.close()
-    
+
     #######################################
     y_pred_output = pd.concat(y_pred_list)
     #######################################
@@ -284,16 +284,8 @@ if __name__=="__main__":
             ]
     feets_data = pd.read_csv(TRAINING_FILE, sep=" ")
     feets_data = feets_data.dropna()
-    phaser = lambda mjd: (mjd/(2*np.pi))%1.
-    feets_data["a21"] = np.abs(feets_data.a2 / feets_data.a1)
-    feets_data["a31"] = np.abs(feets_data.a3 / feets_data.a1)
-    feets_data["a41"] = np.abs(feets_data.a4 / feets_data.a1)
-    feets_data["p21"] = phaser(feets_data.phi_2 - 2*feets_data.phi_1)*2*np.pi
-    feets_data["p31"] = phaser(feets_data.phi_3 - 3*feets_data.phi_1)*2*np.pi
-    feets_data["p41"] = phaser(feets_data.phi_4 - 4*feets_data.phi_1)*2*np.pi
-    feets_data = feets_data.query("period <= 1")
     feets_Y, feets_X = feets_data.iloc[:,1], feets_data.iloc[:,2:]
-    
+
     model = SingleProbRF(tresh = 0.0)
     out_df = singleprob_eval_final(model,
                      X = feets_X[selected_features], Y = feets_Y,
