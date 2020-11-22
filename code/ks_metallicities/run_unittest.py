@@ -33,7 +33,7 @@ class pyfinerAdapterTestCase(unittest.TestCase):
 
 class pyfinerAdapterParallelTestCase(unittest.TestCase):
     def setUp(self):
-        test_string = "python adapter_Ks_metallicity.py 3 "
+        test_string = "python adapter_Ks_metallicity.py 2 "
         test_string += "test" + os.sep + "test_data "
         test_string += "test" + os.sep + "test_curves.csv "
         test_string += "test" + os.sep + "test_output.csv "
