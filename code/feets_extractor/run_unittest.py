@@ -1,4 +1,5 @@
 import os
+import io
 import unittest
 
 class FeetsExtractorTestCase(unittest.TestCase):
@@ -10,12 +11,16 @@ class FeetsExtractorTestCase(unittest.TestCase):
         test_string += "test "
         os.system(test_string)
 
-    def test_output_pdf_files(self):
+    def test_output_file(self):
         self.assertEqual(os.path.exists("test" + os.sep + "test_output.csv"),
                                                      True, 'output not created')
 
+    def test_output_content(self):
+        with io.open("test" + os.sep + "test_output.csv") as test:
+            with io.open("test" + os.sep + "correct_test_output.csv") as correct:
+                self.assertListEqual(list(test), list(correct), "incorrect output")
+
     def tearDown(self):
-        os.system('rm -r output_pdf')
         os.system("rm -r test" + os.sep + "test_output.csv")
 
 class FeetsExtractorParallelTestCase(unittest.TestCase):
@@ -26,12 +31,16 @@ class FeetsExtractorParallelTestCase(unittest.TestCase):
         test_string += "test" + os.sep + "test_output.csv "
         os.system(test_string)
 
-    def test_output_pdf_files(self):
+    def test_output_file(self):
         self.assertEqual(os.path.exists("test" + os.sep + "test_output.csv"),
                                                      True, 'output not created')
 
+    def test_output_content(self):
+        with io.open("test" + os.sep + "test_output.csv") as test:
+            with io.open("test" + os.sep + "correct_test_output.csv") as correct:
+                self.assertListEqual(list(test), list(correct), "incorrect output")
+
     def tearDown(self):
-        os.system('rm -r output_pdf')
         os.system("rm -r test" + os.sep + "test_output.csv")
 
 if __name__=="__main__":
