@@ -8,9 +8,8 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from classifier import SingleProbRF
 import pprint
 import sys
+import parameters_classifier as P
 
-
-TRAINING_FILE = sys.argv[1] #vvv_tset_features.csv
 
 def custom_plot_confusion_matrix(cm,
                           classes,
@@ -44,7 +43,6 @@ def custom_plot_confusion_matrix(cm,
     plt.xlabel('Predicción', size = 17)
     plt.tight_layout()
 
-
 def get_confusion_matrix(y_true, y_pred, labels):
     cnf_matrix_train = confusion_matrix(y_true, y_pred, labels = labels)
     cnf_matrix_train = cnf_matrix_train.astype('float') / cnf_matrix_train.sum(axis=1)[:, np.newaxis]
@@ -57,6 +55,9 @@ def get_cl_report(y_true, y_pred, labels):
     return pd.concat([get_df(cl_report[df]) for df in labels], axis = 0, ignore_index = True)/10 * 100
 
 def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 10, *args, **kwargs):
+    output_dir = "output_report"
+    if not os.path.exists(output_dir):
+        os.system('mkdir {}'.format(output_dir))
     low_prob = []
     if add_low_prob:
         low_prob = ["low_prob"]
@@ -118,14 +119,14 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
     plt.figure(figsize=(12, 8))
     plt.tight_layout()
     custom_plot_confusion_matrix(cm_average, classes = labels, *args ,**kwargs)
-    plt.savefig("confusion.pdf")
+    plt.savefig(output_dir + os.sep + "confusion.pdf")
 #    plt.show()
     plt.close()
     if cm_train:
         plt.figure(figsize=(12, 8))
         plt.tight_layout()
         custom_plot_confusion_matrix(cm_average_train, classes = labels, *args ,**kwargs)
-        plt.savefig("confusion_train.pdf")
+        plt.savefig(output_dir + os.sep + "confusion_train.pdf")
 #        plt.show()
         plt.close()
     ################################################
@@ -136,18 +137,18 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
     cl = cl_df.round(1)[["label", "precision", "recall", "f1-score"]]
     cl_train = cl_df_train.round(1)[["label", "precision", "recall", "f1-score"]]
     #####################################################
-    with open("clasification_report.txt", "w") as fout:
+    with open(output_dir + os.sep + "clasification_report.txt", "w") as fout:
         #print("Classification Report:")
         #print(cl)
         #print("")
-        pprint.pprint("Classification Report:", fout)
+        pprint.pprint(output_dir + os.sep + "Classification Report:", fout)
         pprint.pprint(cl, fout)
         pprint.pprint("", fout)
         if cm_train:
             #print("Classification Report: (Trainning set)")
             #print(cl_train)
             #print("")
-            pprint.pprint("Classification Report: (Trainning set)", fout)
+            pprint.pprint(output_dir + os.sep + "Classification Report: (Trainning set)", fout)
             pprint.pprint(cl_train, fout)
             pprint.pprint("", fout)
 
@@ -162,7 +163,7 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
     plt.xlabel("Features", size = 17)
     plt.yticks(size = 15)
     plt.tight_layout()
-    plt.savefig("importance.pdf")
+    plt.savefig(output_dir + os.sep + "importance.pdf")
 #    plt.show()
     plt.close()
 
@@ -172,121 +173,23 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
     return cl, y_pred_output
 
 if __name__=="__main__":
-    selected_features = [
-            'A1A2_ratio',
-            'AC_std',
-            'AD',
-#                     'Amplitude',
-#                     'AndersonDarling',
-#                     'Autocor_length',
-                    'Beyond1Std',
-#                     'CAR_mean',
-#                     'CAR_sigma',
-#                     'CAR_tau',
-#                     'Con',
-#                     'Eta_e',
-#                     'FluxPercentileRatioMid20',
-#                     'FluxPercentileRatioMid35',
-#                     'FluxPercentileRatioMid50',
-#                     'FluxPercentileRatioMid65',
-#                     'FluxPercentileRatioMid80',
-#                     'Freq1_harmonics_amplitude_0',
-#                     'Freq1_harmonics_amplitude_1',
-#                     'Freq1_harmonics_amplitude_2',
-#                     'Freq1_harmonics_amplitude_3',
-#                     'Freq1_harmonics_rel_phase_0',
-#                     'Freq1_harmonics_rel_phase_1',
-#                     'Freq1_harmonics_rel_phase_2',
-#                     'Freq1_harmonics_rel_phase_3',
-#                     'Freq2_harmonics_amplitude_0',
-#                     'Freq2_harmonics_amplitude_1',
-#                     'Freq2_harmonics_amplitude_2',
-#                     'Freq2_harmonics_amplitude_3',
-#                     'Freq2_harmonics_rel_phase_0',
-#                     'Freq2_harmonics_rel_phase_1',
-#                     'Freq2_harmonics_rel_phase_2',
-#                     'Freq2_harmonics_rel_phase_3',
-#                     'Freq3_harmonics_amplitude_0',
-#                     'Freq3_harmonics_amplitude_1',
-#                     'Freq3_harmonics_amplitude_2',
-#                     'Freq3_harmonics_amplitude_3',
-#                     'Freq3_harmonics_rel_phase_0',
-#                     'Freq3_harmonics_rel_phase_1',
-#                     'Freq3_harmonics_rel_phase_2',
-#                     'Freq3_harmonics_rel_phase_3',
-            'GP_DownRatio',
-            'GP_RiseDownRatio',
-            'GP_RiseRatio',
-            'GP_Skew',
-#                     'Gskew',
-#                     'LinearTrend',
-#                     'MaxSlope',
-#                     'Mean',
-#                     'Meanvariance',
-#                     'MedianAbsDev',
-#                     'MedianBRP',
-#             'MseTemplate',
-#                     'PairSlopeTrend',
-#                     'PercentAmplitude',
-#                     'PercentDifferenceFluxPercentile',
-#                     'PeriodLS',
-#                     'Period_fit',
-#                     'Psi_CS',
-#                     'Psi_eta',
-#                     'Q31',
-#             'R2Template',
-            'Rcs',
-#                     'Skew',
-#                     'SlottedA_length',
-#                     'SmallKurtosis',
-#                     'Std',
-#                     'StetsonK',
-#                     'StetsonK_AC',
-#                     'StructureFunction_index_21',
-#                     'StructureFunction_index_31',
-#                     'StructureFunction_index_32',
-            'Tm',
-#             'a0',
-            'a1',
-            'a2',
-            'a3',
-            'a4',
-            'a5',
-            'a6',
-            'a7',
-            'iqr',
-            'kurtosis',
-            'mad',
-#             'mediana',
-            'mpr20',
-            'mpr35',
-            'mpr50',
-            'mpr65',
-            'mpr80',
-            'mv',
-            'phi_1',
-            'phi_2',
-            'phi_3',
-            'phi_4',
-            'phi_5',
-            'phi_6',
-            'phi_7',
-            'sigma',
-            'skewness',
-            'slope',
-             'period',
-             'a21',
-             'a31',
-             'a41',
-             'p21',
-             'p31',
-             'p41',
-            ]
+    # user input
+    num_proc = int(sys.argv[1])
+    TRAINING_FILE = sys.argv[2]
+    if len(sys.argv)>3:
+        config_preset = sys.argv[3]
+    else:
+        config_preset = "default"
+    # Load training feets
     feets_data = pd.read_csv(TRAINING_FILE, sep=" ")
+    feets_data = feets_data.replace([np.inf, -np.inf], np.nan)
     feets_data = feets_data.dropna()
-    feets_Y, feets_X = feets_data.iloc[:,1], feets_data.iloc[:,2:]
-
-    model = SingleProbRF(tresh = 0.0)
+    feets_Y = feets_data.label
+    feets_X = feets_data[P.selected_features[config_preset]]
+    # Classifier intance
+    model = SingleProbRF(thresh = P.threshold)
+    model.MODEL_PARAMS.update(P.model_params[config_preset])
+    model.MODEL_PARAMS["n_jobs"] = num_proc
     out_df = singleprob_eval_final(model,
-                     X = feets_X[selected_features], Y = feets_Y,
-                     cm_train = False, add_low_prob=False)
+                                         X = feets_X, Y = feets_Y,
+                                         cm_train = True, add_low_prob=False)

@@ -21,33 +21,33 @@ class SingleProbRF():
                      'random_state': None,
                      'verbose': 0,
                      'warm_start': False}
-    
-    
-    def __init__(self, tresh = 0.0):
+
+
+    def __init__(self, thresh = 0.0):
         self.rf = None
-        self.tresh = tresh
-        
+        self.thresh = thresh
+
     def fit(self, X, Y):
         model_params = self.MODEL_PARAMS
 
         classes = np.unique(Y)
         model_params["class_weight"] = { cl:Y[Y == classes[0]].count()/Y[Y == cl].count() for cl in classes  }
-        
-        
+
+
         self.rf = RandomForestClassifier(**model_params)
         self.rf.fit(X, Y)
-    
+
     def predict(self, x_data):
 
         model = self.rf
         pred_union = pd.DataFrame(model.predict_proba(x_data), columns=[x for x in model.classes_])
-        
+
         pred_df = pd.DataFrame([],columns = ["label", "prob"])
         pred_df["label"] = pred_union.idxmax(axis=1)
         pred_df["prob"] = pred_union.max(axis=1)
-        df_out = pred_df.apply(lambda row: row.label if row.prob >= self.tresh else "low_prob", axis = 1)
+        df_out = pred_df.apply(lambda row: row.label if row.prob >= self.thresh else "low_prob", axis = 1)
         return df_out
-    
+
     def predict_proba(self, x_data):
         model = self.rf
         pred_union = pd.DataFrame(model.predict_proba(x_data), columns=[x for x in model.classes_])
