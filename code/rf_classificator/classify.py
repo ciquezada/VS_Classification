@@ -1,12 +1,13 @@
 from classifier import SingleProbRF
+import parameters_classifier as P
 import pandas as pd
 import numpy as np
 import sys
 import os
 
 
-def classify(model, data):
-    predict_proba = model.predict_proba(data).set_index([data.index])
+def classify(model, data, selected_features):
+    predict_proba = model.predict_proba(data[selected_features]).set_index([data.index])
     y_pred = predict_proba.idxmax(axis=1)
     y_prob = predict_proba.max(axis=1)
     y_classification = data[["filename"]].copy()
@@ -42,6 +43,7 @@ if __name__=="__main__":
     # Load data features
     data_features = pd.read_csv(DATA_FILE, sep=" ")
     data_features = data_features.replace([np.inf, -np.inf], np.nan).dropna()
+
     # Classify data
-    classification_result = classify(model, data_features)
+    classification_result = classify(model, data_features, SELECTED_FEATURES)
     classification_result.to_csv(OUTPUT_FILE, sep=" ", index=False)
