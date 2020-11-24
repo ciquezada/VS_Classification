@@ -55,7 +55,9 @@ def get_feets_extra_params(selected_features, curve_period):
         params["FitFourier"] = {"period": curve_period, "gamma": P.FitFourier_gamma}
     return params
 
-def extract_curve_features(curve_id, curve_period, curve_ks_path, selected_features):
+def extract_curve_features(curve_data, selected_features):
+    curve_id, curve_period = curve_data.vvv, curve_data.period
+    curve_ks_path = curve_data.ks_path
     ks_star_data = pd.read_csv(curve_ks_path,
                                 names=["mjd", "mag", "emag"],
                                         delim_whitespace=True)
@@ -71,6 +73,8 @@ def extract_curve_features(curve_id, curve_period, curve_ks_path, selected_featu
     features_dict = dict(zip(*extracted_features))
     features_dict["filename"] = curve_id
     features_dict["period"] = curve_period
+    if "label" in curve_data:
+        features_dict["label"] = curve_data.label
     # extr = list(pd.DataFrame([extr])[selected_features].values[0])
     return features_dict
 
@@ -80,15 +84,15 @@ def extract_features(curves_data, selected_features):
         if not os.path.exists(row["ks_path"]):
             print("The curve dont exists: {}".format(row["vvv"]))
             continue
-        curve_id = row["vvv"]
-        curve_period = row["period"]
-        curve_ks_path = row["ks_path"]
         features.append(
-                        extract_curve_features(curve_id, curve_period,
-                                            curve_ks_path, selected_features)
+                        extract_curve_features(row, selected_features)
                         )
     extractor_output = pd.DataFrame(features)
-    return extractor_output[["filename", "period"] + selected_features]
+    if "label" in features[0]:
+        curve_info = ["filename", "label", "period"] + selected_features
+    else:
+        curve_info = ["filename", "period"] + selected_features
+    return extractor_output[curve_info]
 
 if __name__=="__main__":
     # user input
