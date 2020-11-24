@@ -2,6 +2,7 @@
 
 # Classifier
 threshold = 0.0
+
 # Features selection
 selected_features = {}
 # RRlyr features preset
@@ -107,6 +108,7 @@ selected_features["rrlyr"] = [
                                  'sigma',
                                  'skewness',
                                  'slope',
+                                 'period',
                                  'Beyond3Std',
                                  'Beyond5Std',
                                  'a21',
@@ -220,6 +222,7 @@ selected_features["default"] = [
                                  'sigma',
                                  'skewness',
                                  'slope',
+                                 'period',
                                  'Beyond3Std',
                                  'Beyond5Std',
                                  'a21',
@@ -237,6 +240,7 @@ selected_features["test"] = [
                                 'GP_RiseDownRatio',
                                 'R2Template',
                                  'iqr',
+                                 'period',
                                  'p41',
                                     ]
 
@@ -290,10 +294,10 @@ model_parameters["test"] = {'bootstrap': True,
                                  'max_samples': None,
                                  'min_impurity_decrease': 0.0,
                                  'min_impurity_split': None,
-                                 'min_samples_leaf': 0.0001,
-                                 'min_samples_split': 0.001,
+                                 'min_samples_leaf': 0.001,
+                                 'min_samples_split': 0.01,
                                  'min_weight_fraction_leaf': 0.0,
-                                 'n_estimators': 150,
+                                 'n_estimators': 50,
                                  'n_jobs': 60,
                                  'oob_score': True,
                                  'random_state': None,

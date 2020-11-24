@@ -25,15 +25,18 @@ if __name__=="__main__":
         config_preset = sys.argv[5]
     else:
         config_preset = "default"
+    SELECTED_FEATURES = P.selected_features[config_preset]
+    MODEL_PARAMS = P.model_parameters[config_preset]
+
     # Load training set
     feets_data = pd.read_csv(TRAINING_FILE, sep=" ")
     feets_data = feets_data.replace([np.inf, -np.inf], np.nan)
     feets_data = feets_data.dropna()
     feets_Y = feets_data.label
-    feets_X = feets_data[P.selected_features[config_preset]]
+    feets_X = feets_data[SELECTED_FEATURES]
     # Model training
     model = SingleProbRF(thresh = P.threshold)
-    model.MODEL_PARAMS.update(P.model_params[config_preset])
+    model.MODEL_PARAMS.update(MODEL_PARAMS)
     model.MODEL_PARAMS["n_jobs"] = NUM_PROC
     model.fit(feets_X, feets_Y)
     # Load data features

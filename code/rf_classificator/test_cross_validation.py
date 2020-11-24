@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import itertools as it
+import os
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedShuffleSplit
@@ -54,8 +55,8 @@ def get_cl_report(y_true, y_pred, labels):
     cl_report = classification_report(y_true, y_pred, labels = labels, output_dict = True)
     return pd.concat([get_df(cl_report[df]) for df in labels], axis = 0, ignore_index = True)/10 * 100
 
-def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 10, *args, **kwargs):
-    output_dir = "output_report"
+def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False,
+                                        cv = 10, output_dir=".", *args, **kwargs):
     if not os.path.exists(output_dir):
         os.system('mkdir {}'.format(output_dir))
     low_prob = []
@@ -141,14 +142,14 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
         #print("Classification Report:")
         #print(cl)
         #print("")
-        pprint.pprint(output_dir + os.sep + "Classification Report:", fout)
+        pprint.pprint("Classification Report:", fout)
         pprint.pprint(cl, fout)
         pprint.pprint("", fout)
         if cm_train:
             #print("Classification Report: (Trainning set)")
             #print(cl_train)
             #print("")
-            pprint.pprint(output_dir + os.sep + "Classification Report: (Trainning set)", fout)
+            pprint.pprint("Classification Report: (Trainning set)", fout)
             pprint.pprint(cl_train, fout)
             pprint.pprint("", fout)
 
@@ -174,22 +175,27 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False, cv = 
 
 if __name__=="__main__":
     # user input
-    num_proc = int(sys.argv[1])
+    NUM_PROC = int(sys.argv[1])
     TRAINING_FILE = sys.argv[2]
-    if len(sys.argv)>3:
-        config_preset = sys.argv[3]
+    OUTPUT_DIR = sys.argv[3]
+    if len(sys.argv)>4:
+        config_preset = sys.argv[4]
     else:
         config_preset = "default"
+    SELECTED_FEATURES = P.selected_features[config_preset]
+    MODEL_PARAMS = P.model_parameters[config_preset]
+
     # Load training feets
     feets_data = pd.read_csv(TRAINING_FILE, sep=" ")
     feets_data = feets_data.replace([np.inf, -np.inf], np.nan)
     feets_data = feets_data.dropna()
     feets_Y = feets_data.label
-    feets_X = feets_data[P.selected_features[config_preset]]
+    feets_X = feets_data[SELECTED_FEATURES]
     # Classifier intance
     model = SingleProbRF(thresh = P.threshold)
-    model.MODEL_PARAMS.update(P.model_params[config_preset])
-    model.MODEL_PARAMS["n_jobs"] = num_proc
+    model.MODEL_PARAMS.update(MODEL_PARAMS)
+    model.MODEL_PARAMS["n_jobs"] = NUM_PROC
     out_df = singleprob_eval_final(model,
-                                         X = feets_X, Y = feets_Y,
-                                         cm_train = True, add_low_prob=False)
+                                         X=feets_X, Y=feets_Y,
+                                         cm_train=True, add_low_prob=False,
+                                         output_dir=OUTPUT_DIR)
