@@ -25,9 +25,10 @@ Returns:
 
 def run_ks_metallicity(i):
     RUN_CODE_STRING = "python Ks_metalicity.py " # command line
-    RUN_CODE_STRING += "temp" + os.sep + "input_{}.csv " # temp input file
-    RUN_CODE_STRING += "temp" + os.sep + "output_{}.csv " # temp output file
-    os.system(RUN_CODE_STRING.format(i, i))
+    RUN_CODE_STRING += f"temp{os.sep}input_{i}.csv " # temp input file
+    RUN_CODE_STRING += f"temp{os.sep}output_{i}.csv " # temp output file
+    RUN_CODE_STRING += f"temp{os.sep}pymerlin_{i}.csv " # temp pymerlin file
+    os.system(RUN_CODE_STRING)
 
 if __name__=="__main__":
     # user input
@@ -39,11 +40,11 @@ if __name__=="__main__":
     curves_df = pd.read_csv(curves_file, sep=" ")
     input_df = curves_df[["vvv", "aov1"]].copy()
     input_df["ks"] = curves_df.vvv.apply(lambda x:
-                                    curves_dir + os.sep + x + ".dat")
-    input_df["j"] = "j" + os.sep + "j_empty.dat"
-    input_df["h"] = "h" + os.sep + "h_empty.dat"
+                                                f"{curves_dir}{os.sep}{x}.dat")
+    input_df["j"] = f"j{os.sep}j_empty.dat"
+    input_df["h"] = f"h{os.sep}h_empty.dat"
     input_df["output_pdf"] = curves_df.vvv.apply(lambda x:
-                                    "output_pdf" + os.sep + x + ".pdf")
+                                                f"output_pdf{os.sep}{x}.pdf")
     del(curves_df)
     # making needed directories
     if not os.path.exists("temp"):
@@ -54,7 +55,7 @@ if __name__=="__main__":
     chunksize = int(np.ceil(input_df.shape[0]/num_proc))
     for i in range(num_proc):
         input_df.iloc[chunksize*i:chunksize*(i+1),:].to_csv(
-                                    "temp" + os.sep + "input_{}.csv".format(i),
+                                                f"temp{os.sep}input_{i}.csv",
                                                     index=False, header=False)
     # calling pyfiner pipeline
     pool = Pool(num_proc)
@@ -62,7 +63,7 @@ if __name__=="__main__":
     pool.close()
     pool.join()
     # joining output parts and saving
-    output_df = pd.concat([pd.read_csv("temp{}output_{}.csv".format(os.sep, i))
+    output_df = pd.concat([pd.read_csv(f"temp{os.sep}output_{i}.csv")
                             for i in range(num_proc)], ignore_index=True)
     output_df.to_csv(output_file, sep=" ", index=False)
     # cleaning mess
