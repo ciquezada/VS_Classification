@@ -3,9 +3,9 @@ import io
 import unittest
 
 
-class CrossValidationTestCase(unittest.TestCase):
+class SearchParamsTestCase(unittest.TestCase):
     def setUp(self):
-        test_string = "python search_params.py 1 "
+        test_string = "python search_params.py 2 "
         test_string += "unittest" + os.sep + "unittest_train_features.csv "
         test_string += "unittest" + os.sep + "test_best_params.txt "
         test_string += "test "
@@ -14,7 +14,7 @@ class CrossValidationTestCase(unittest.TestCase):
     def test_output_files(self):
         self.assertEqual(os.path.exists("unittest" + os.sep + "test_best_params.txt"),
                                                      True, 'output not created')
-                                                     
+
     def tearDown(self):
         os.system("rm -r unittest" + os.sep + "test_best_params.txt")
 
