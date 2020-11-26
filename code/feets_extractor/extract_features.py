@@ -51,6 +51,8 @@ if __name__=="__main__":
     # calling pyfiner pipeline
     pool = Pool(num_proc)
     pool.map(run_feets_extractor, enumerate([features_preset]*num_proc))
+    pool.close()
+    pool.join()
     # joining output parts and saving
     output_df = pd.concat([pd.read_csv("temp{}output_{}.csv".format(os.sep, i), sep=" ")
                             for i in range(num_proc)], ignore_index=True)
