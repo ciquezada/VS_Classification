@@ -245,7 +245,7 @@ selected_features["test"] = [
                                     ]
 
 # Test features preset
-selected_features["rrlyr"] = [
+selected_features["aliases"] = [
                                 'A1A2_ratio',
                                 'AC_std',
                                 'AD',
