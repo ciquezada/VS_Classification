@@ -107,6 +107,7 @@ if __name__=="__main__":
     save_params(OUTPUT_FILE, best_params)
     # Second search
     best_params_2 = second_search(feets_X, feets_Y, NUM_PROC, best_params, config_preset)
+    best_params_2["class_weight"] = best_params["class_weight"]
     best_params_2["n_estimators"] = 20000
     best_params_2["n_jobs"] = NUM_PROC
     best_params_2["bootstrap"] = True
