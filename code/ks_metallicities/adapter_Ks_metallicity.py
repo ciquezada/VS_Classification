@@ -30,6 +30,13 @@ def run_ks_metallicity(i):
     RUN_CODE_STRING += f"temp{os.sep}pymerlin_{i}.csv " # temp pymerlin file
     os.system(RUN_CODE_STRING)
 
+def run_only_pyfiner(i):
+    RUN_CODE_STRING = "python Ks_metalicity.py " # command line
+    RUN_CODE_STRING += f"temp{os.sep}input_{i}.csv " # temp input file
+    RUN_CODE_STRING += f"temp{os.sep}output_{i}.csv " # temp output file
+    RUN_CODE_STRING += "-p-no_pymerlin " # temp pymerlin file
+    os.system(RUN_CODE_STRING)
+
 if __name__=="__main__":
     # user input
     num_proc = int(sys.argv[1])
@@ -59,7 +66,10 @@ if __name__=="__main__":
                                                     index=False, header=False)
     # calling pyfiner pipeline
     pool = Pool(num_proc)
-    pool.map(run_ks_metallicity, range(num_proc))
+    if not "-p-no_pymerlin" in sys.argv:
+        pool.map(run_ks_metallicity, range(num_proc))
+    else:
+        pool.map(run_only_pyfiner, range(num_proc))
     pool.close()
     pool.join()
     # joining output parts and saving

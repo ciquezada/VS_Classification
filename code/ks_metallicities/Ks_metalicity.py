@@ -84,13 +84,14 @@ if __name__=="__main__":
     # output_file = 'output_rr.csv' #CSV file will contain 25 columns with the results: Var_name, Period, Intensity/magnitude mean/median values, Fourier parameters, cost values, and metalicities.
     input_file = sys.argv[1]
     output_file = sys.argv[2]
-    pymerlin_input_file = sys.argv[3]
     ####### END USER INPUT
 
     names = ['var_name', 'P', 'file_ks', 'file_j', 'file_h', 'output_pdf']
     data = pd.read_csv(input_file, names=names)
 
     # Pipeline by F. Gran (fegran at uc.cl)
-    pyfiner_output = run_pyfiner(data)
-    to_write = run_pymerlin(pyfiner_output, pymerlin_input_file)
+    to_write = run_pyfiner(data)
+    if not "-p-no_pymerlin" in sys.argv:
+        pymerlin_input_file = sys.argv[3]
+        to_write = run_pymerlin(to_write, pymerlin_input_file)
     to_write.to_csv(output_file, index=False, header=True)
