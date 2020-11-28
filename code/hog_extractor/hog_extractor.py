@@ -52,6 +52,6 @@ class HogExtractor:
         img = self._get_image_data(phase, magnitude, error)
         fd, hog_image = feature.hog(img, orientations=9, pixels_per_cell=(8, 8),
                     cells_per_block=(2, 2), visualize=True, multichannel=True)
-        self._hog_inspect(img, hog_image)
+        # self._hog_inspect(img, hog_image)
         hog_dict = {f"{i}":x for i, x in enumerate(fd)}
         return hog_dict
