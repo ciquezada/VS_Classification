@@ -5,9 +5,9 @@ import numpy as np
 from multiprocessing import Pool
 
 
-def run_feets_extractor(arg):
+def run_hog_extractor(arg):
     i, features_preset = arg
-    RUN_CODE_STRING = "python adapter_feets_extractor.py " # command line
+    RUN_CODE_STRING = "python extract_hog_features.py " # command line
     RUN_CODE_STRING += "temp" + os.sep + "input_{}.csv " # temp input file
     RUN_CODE_STRING += "temp" + os.sep + "output_{}.csv " # temp output file
     RUN_CODE_STRING += features_preset + " " # features selection
@@ -50,7 +50,7 @@ if __name__=="__main__":
                                                     index=False, sep=" ")
     # calling pyfiner pipeline
     pool = Pool(num_proc)
-    pool.map(run_feets_extractor, enumerate([features_preset]*num_proc))
+    pool.map(run_hog_extractor, enumerate([features_preset]*num_proc))
     pool.close()
     pool.join()
     # joining output parts and saving
