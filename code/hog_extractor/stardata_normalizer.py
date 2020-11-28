@@ -49,7 +49,6 @@ def fit(time, magnitude, error, period):
     t, y = variables('t, y')
     model_dict = {y: fourier_template(t, t_sync, mag_mean, P=period, N=7, A=fit_ampl, a0=0, a1=1, phi_1=0)}
     fit = Fit(model_dict, t=time, y=magnitude, sigma_y = error)
-    print(fit)
     fit_result = fit.execute()
     params = fit_result.params
     # END FIT ####################
