@@ -358,6 +358,11 @@ selected_features["aliases"] = [
                                  'p41',
                                     ]
 
+# HOGS
+selected_features["hogs"] = [f"{x}" for x in range(3780)]
+
+
+
 # Hyperparameters selection
 model_parameters = {}
 # RR Lyr model parameters preset
@@ -433,6 +438,26 @@ model_parameters["test"] = {'bootstrap': True,
                                  'min_samples_split': 0.01,
                                  'min_weight_fraction_leaf': 0.0,
                                  'n_estimators': 50,
+                                 'n_jobs': 60,
+                                 'oob_score': True,
+                                 'random_state': None,
+                                 'verbose': 0,
+                                 'warm_start': False}
+
+# test model parameters preset
+model_parameters["hogs"] = {'bootstrap': True,
+                                 'ccp_alpha': 0.0,
+                                 'criterion': 'gini',
+                                 'max_depth': 10,
+                                 'max_features': "auto",
+                                 'max_leaf_nodes': None,
+                                 'max_samples': None,
+                                 'min_impurity_decrease': 0.0,
+                                 'min_impurity_split': None,
+                                 'min_samples_leaf': 0.001,
+                                 'min_samples_split': 0.01,
+                                 'min_weight_fraction_leaf': 0.0,
+                                 'n_estimators': 200,
                                  'n_jobs': 60,
                                  'oob_score': True,
                                  'random_state': None,
