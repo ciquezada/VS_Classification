@@ -42,7 +42,10 @@ def first_search(X, Y, NUM_PROC, config_preset):
 
 def second_params(best_params):
     # Random parameters
-    max_features = [x for x in range(best_params['max_features']-1,
+    if type(best_params['max_features'])=="str":
+        max_features = [best_params['max_features']]
+    else:
+        max_features = [x for x in range(best_params['max_features']-1,
                                                 best_params['max_features']+1)]
     max_depth = [x for x in range(best_params['max_depth']-2,
                                                 best_params['max_depth']+2)]
