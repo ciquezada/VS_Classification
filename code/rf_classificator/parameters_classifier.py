@@ -365,7 +365,7 @@ selected_features["aliases"] = [
 selected_features["hogs"] = ["period"]+[f"{x}" for x in range(3780)]
 
 # HOGS+FEATURES
-selected_features["hogs+rrlyr"] = ["period"]+[f"{x}" for x in range(3780)]
+selected_features["hogs+rrlyr"] = selected_features["rrlyr"]+[f"{x}" for x in range(3780)]
 
 # Hyperparameters selection
 model_parameters = {}
