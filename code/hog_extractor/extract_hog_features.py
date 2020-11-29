@@ -56,8 +56,11 @@ def extract_features(curves_data, hog_preset):
             print("The curve dont exists: {}".format(row["vvv"]))
             continue
         features.append(extract_curve_features(row, hog_preset))
+    head_features = ["filename", "period"]
+    if "label" in row:
+        head_features += ["label"]
     extractor_output = pd.DataFrame(features)[
-                            ["filename", "period"]+[f"{x}" for x in range(3780)]
+                                    head_features+[f"{x}" for x in range(3780)]
                                                 ]
     return extractor_output
 
