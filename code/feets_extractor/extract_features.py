@@ -38,6 +38,8 @@ if __name__=="__main__":
 
     input_df["ks_path"] = curves_df.vvv.apply(lambda x:
                                     ks_curves_dir + os.sep + x + ".dat")
+    if "label" in curves_df:
+        input_df["label"] = curves_df.label
     del(curves_df)
     # making needed directories
     if not os.path.exists("temp"):
