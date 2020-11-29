@@ -28,8 +28,8 @@ class HogExtractor:
         fig = plt.figure(figsize=(10,5), dpi=72)
         plt.ylim(-1,1)
         plt.gca().invert_yaxis()
-        plt.scatter(phase, mag)#, 0.05/(emag)**2)
-        plt.scatter(phase+1, mag)#, 0.05/(emag)**2)
+        err = lambda x: [0, 0, 0, 1 - 0.7*((x - emag.min())/(emag.max()-emag.min()))]
+        plt.scatter(phase, mag, color=[err(x) for x in emag.values])
 
         #Image from plot
         plt.axis('off')
