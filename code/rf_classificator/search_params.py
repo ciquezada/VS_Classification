@@ -15,23 +15,12 @@ def save_params(file_path, params):
         pprint(new_model.get_params(), stream=fout)
     return 0
 
-def starter_params():
+def starter_params(config_preset):
     # Random parameters
-    max_features = [x for x in range(10,20)]
-    max_depth = [x for x in range(60,75)]
-    min_samples_split = list(np.linspace(0.00001, 0.0001, 30))
-    min_samples_leaf = list(np.linspace(0.0001, 0.001, 30))
-    class_weight = ["balanced", "balanced_subsample"]
-    # Create the random grid
-    random_grid = {'max_features': max_features,
-                   'max_depth': max_depth,
-                   'min_samples_split': min_samples_split,
-                   'min_samples_leaf': min_samples_leaf,
-                   "class_weight": class_weight}
-    return random_grid
+    return P.random_grid[config_preset]
 
 def first_search(X, Y, NUM_PROC, config_preset):
-    random_grid = starter_params()
+    random_grid = starter_params(config_preset)
     ### SOLO PARA TEST ###
     if config_preset=="test":
         n_iter = 2
