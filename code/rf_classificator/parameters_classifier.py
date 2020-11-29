@@ -1,3 +1,6 @@
+import numpy as np
+
+
 ## PARAMETERS
 
 # Classifier
@@ -359,7 +362,7 @@ selected_features["aliases"] = [
                                     ]
 
 # HOGS
-selected_features["hogs"] = [f"{x}" for x in range(3780)]
+selected_features["hogs"] = ["period"]+[f"{x}" for x in range(3780)]
 
 
 
@@ -454,8 +457,8 @@ model_parameters["hogs"] = {'bootstrap': True,
                                  'max_samples': None,
                                  'min_impurity_decrease': 0.0,
                                  'min_impurity_split': None,
-                                 'min_samples_leaf': 0.001,
-                                 'min_samples_split': 0.01,
+                                 'min_samples_leaf': 0.0001,
+                                 'min_samples_split': 0.001,
                                  'min_weight_fraction_leaf': 0.0,
                                  'n_estimators': 200,
                                  'n_jobs': 60,
@@ -463,3 +466,47 @@ model_parameters["hogs"] = {'bootstrap': True,
                                  'random_state': None,
                                  'verbose': 0,
                                  'warm_start': False}
+
+
+
+# Search parameters
+random_grid = {}
+
+## RRLyr
+max_features = [x for x in range(10,20)]
+max_depth = [x for x in range(60,75)]
+min_samples_split = list(np.linspace(0.00001, 0.0001, 30))
+min_samples_leaf = list(np.linspace(0.0001, 0.001, 30))
+class_weight = ["balanced", "balanced_subsample"]
+# Create the random grid
+random_grid["rrlyr"] = {'max_features': max_features,
+               'max_depth': max_depth,
+               'min_samples_split': min_samples_split,
+               'min_samples_leaf': min_samples_leaf,
+               "class_weight": class_weight}
+
+## Test
+max_features = [x for x in range(10,20)]
+max_depth = [x for x in range(10,12)]
+min_samples_split = list(np.linspace(0.001, 0.01, 30))
+min_samples_leaf = list(np.linspace(0.01, 0.1, 30))
+class_weight = ["balanced", "balanced_subsample"]
+# Create the random grid
+random_grid["test"] = {'max_features': max_features,
+                           'max_depth': max_depth,
+                           'min_samples_split': min_samples_split,
+                           'min_samples_leaf': min_samples_leaf,
+                           "class_weight": class_weight}
+
+## HOGS
+max_features = ["sqrt"]
+max_depth = [x for x in range(10,75)]
+min_samples_split = list(np.linspace(0.00001, 0.001, 30))
+min_samples_leaf = list(np.linspace(0.0001, 0.01, 30))
+class_weight = ["balanced", "balanced_subsample"]
+# Create the random grid
+random_grid["hogs"] = {'max_features': max_features,
+                       'max_depth': max_depth,
+                       'min_samples_split': min_samples_split,
+                       'min_samples_leaf': min_samples_leaf,
+                       "class_weight": class_weight}
