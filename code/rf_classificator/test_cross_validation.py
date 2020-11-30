@@ -169,9 +169,9 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False,
     plt.close()
     with open(output_dir + os.sep + "importance_report.txt", "w") as fout:
         pprint.pprint("Importance Report: ", fout)
-        importance_out = {f:v for f,v in zip(
+        importance_out = [{f:v} for f,v in zip(
                                         np.asarray(features_names)[sorted_idx],
-                                            feature_importances[sorted_idx])}
+                                            feature_importances[sorted_idx])]
         pprint.pprint(importance_out, fout)
     #######################################
     y_pred_output = pd.concat(y_pred_list)

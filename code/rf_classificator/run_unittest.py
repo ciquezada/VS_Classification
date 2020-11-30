@@ -30,7 +30,7 @@ class CrossValidationTestCase(unittest.TestCase):
         output_dir = "unittest" + os.sep + "unittest_cv_output"
         n_pdfs = len([name for name in os.listdir(output_dir)
                                 if os.path.isfile(output_dir+os.sep+name)])
-        self.assertEqual(n_pdfs, 4, 'incorrect quantity of pdfs generated')
+        self.assertEqual(n_pdfs, 5, 'incorrect quantity of reports generated')
         self.assertEqual(os.path.exists("unittest" + os.sep + "unittest_cv_output"),
                                                      True, 'output not created')
 
