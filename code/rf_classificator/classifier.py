@@ -20,7 +20,8 @@ class SingleProbRF():
                      'oob_score': True,
                      'random_state': None,
                      'verbose': 0,
-                     'warm_start': False}
+                     'warm_start': False,
+                     "class_weight": "balanced"}
 
 
     def __init__(self, thresh = 0.0):
@@ -30,8 +31,9 @@ class SingleProbRF():
     def fit(self, X, Y):
         model_params = self.MODEL_PARAMS
 
-        classes = np.unique(Y)
-        model_params["class_weight"] = { cl:Y[Y == classes[0]].count()/Y[Y == cl].count() for cl in classes  }
+        # classes = np.unique(Y)
+        # model_params["class_weight"] = { cl:Y[Y == classes[0]].count()/Y[Y == cl].count() for cl in classes  }
+        # model_params["class_weight"] = "balanced"
 
 
         self.rf = RandomForestClassifier(**model_params)
