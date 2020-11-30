@@ -30,6 +30,7 @@ class HogExtractor:
         plt.gca().invert_yaxis()
         err = lambda x: [0, 0, 0, 1 - 0.7*((x - emag.min())/(emag.max()-emag.min()))]
         plt.scatter(phase, mag, color=[err(x) for x in emag.values])
+        plt.scatter(phase+1, mag, color=[err(x) for x in emag.values])
 
         #Image from plot
         plt.axis('off')
