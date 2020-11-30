@@ -42,7 +42,7 @@ def first_search(X, Y, NUM_PROC, config_preset):
 
 def second_params(best_params):
     # Random parameters
-    if type(best_params['max_features'])=="str":
+    if type(best_params['max_features'])==str:
         max_features = [best_params['max_features']]
     else:
         max_features = [x for x in range(best_params['max_features']-1,
