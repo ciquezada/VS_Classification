@@ -207,9 +207,9 @@ if __name__=="__main__":
                                          output_dir=OUTPUT_DIR)
     # Save CV prediction
     out = feets_data[["filename", "label", "period"]].join(out_df[1])
-    pred = out.iloc[:,3:].max(axis=1)
-    prob = out.iloc[:,3:].idxmax(axis=1)
-    out["pred"] = pred
+    prob = out.iloc[:,3:].max(axis=1)
+    pred = out.iloc[:,3:].idxmax(axis=1)
     out["prob"] = prob
+    out["pred"] = pred
     out.to_csv(f"{OUTPUT_DIR}{os.sep}train_cv_prediction.txt",
                                             sep=" ", index=False)
