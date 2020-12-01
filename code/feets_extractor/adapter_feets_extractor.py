@@ -96,7 +96,10 @@ def extract_features(curves_data, selected_features):
         curve_info = ["filename", "label", "period"] + selected_features
     else:
         curve_info = ["filename", "period"] + selected_features
-    return extractor_output[curve_info]
+    if curves_data.shape[0]:
+        return extractor_output[curve_info]
+    else:
+        return pd.DataFrame(columns=curve_info)
 
 if __name__=="__main__":
     # user input
