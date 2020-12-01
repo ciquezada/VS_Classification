@@ -107,10 +107,10 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False,
         feature_importances += model.rf.feature_importances_
         ##################################################
         ## Y_PRED OUTPUT #################################
-        y_pred_list.append(pd.DataFrame(y_pred, columns=["y_pred"]).set_index([y_test.index]))
+        y_pred_list.append(model.predict_proba(x_test).set_index([y_test.index]))
         #################################################
         ## Y_PRED_PROBA OUTPUT #################################
-        y_pred_list[-1]["prob"] = model.predict_proba(x_test).set_index([y_test.index]).max(axis=1)
+        # y_pred_list[-1]["prob"] = model.predict_proba(x_test).set_index([y_test.index]).max(axis=1)
         #################################################
 
 
@@ -175,6 +175,7 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False,
         pprint.pprint(importance_out, fout)
     #######################################
     y_pred_output = pd.concat(y_pred_list)
+    y_pred_output = y_pred_output.groupby(y_pred_output.index).mean()
     #######################################
     return cl, y_pred_output
 
@@ -204,3 +205,11 @@ if __name__=="__main__":
                                          X=feets_X, Y=feets_Y,
                                          cm_train=True, add_low_prob=False,
                                          output_dir=OUTPUT_DIR)
+    # Save CV prediction
+    out = feets_data[["filename", "label", "period"]].join(out_df[1])
+    pred = out.iloc[:,3:].max(axis=1)
+    prob = out.iloc[:,3:].idxmax(axis=1)
+    out["pred"] = pred
+    out["prob"] = prob
+    out.to_csv(f"{OUTPUT_DIR}{os.sep}train_cv_prediction.txt",
+                                            sep=" ", index=False)
