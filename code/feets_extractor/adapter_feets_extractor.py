@@ -92,7 +92,7 @@ def extract_features(curves_data, selected_features):
                         extract_curve_features(row, selected_features)
                         )
     extractor_output = pd.DataFrame(features)
-    if "label" in features[0]:
+    if "label" in curves_data:
         curve_info = ["filename", "label", "period"] + selected_features
     else:
         curve_info = ["filename", "period"] + selected_features
