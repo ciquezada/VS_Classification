@@ -5,6 +5,7 @@ from ext_inter_percentile_range import InterPercentileRanges
 from ext_magnitude_distribution import MagnitudeDistribution
 from ext_scipy_anderson_darling import SciPyAndersonDarling
 from ext_stats_model_tsa import StatsmodelTSA
+from ext_fit_braga_template import FitBragaTemplate
 import feets
 import numpy as np
 import pandas as pd
@@ -38,6 +39,7 @@ feets.register_extractor(StatsmodelTSA)
 feets.register_extractor(FitGP)
 feets.register_extractor(FitTemplate)
 feets.register_extractor(FitFourier)
+feets.register_extractor(FitBragaTemplate)
 
 def drop_err(star_data):
     emed = star_data.emag.median()
@@ -51,6 +53,8 @@ def get_feets_extra_params(selected_features, curve_period):
         params["FitGP"] = {"period": curve_period, "gamma": P.FitGP_gamma}
     if not set(selected_features).isdisjoint(P.template_dependent_features):
         params["FitTemplate"] = {"period": curve_period}
+    if not set(selected_features).isdisjoint(P.braga_template_dependent_features):
+        params["FitBragaTemplate"] = {"period": curve_period}
     if not set(selected_features).isdisjoint(P.fcomponents_dependent_features):
         params["FitFourier"] = {"period": curve_period, "gamma": P.FitFourier_gamma}
     return params
@@ -88,11 +92,14 @@ def extract_features(curves_data, selected_features):
                         extract_curve_features(row, selected_features)
                         )
     extractor_output = pd.DataFrame(features)
-    if "label" in features[0]:
+    if "label" in curves_data:
         curve_info = ["filename", "label", "period"] + selected_features
     else:
         curve_info = ["filename", "period"] + selected_features
-    return extractor_output[curve_info]
+    if curves_data.shape[0]:
+        return extractor_output[curve_info]
+    else:
+        return pd.DataFrame(columns=curve_info)
 
 if __name__=="__main__":
     # user input

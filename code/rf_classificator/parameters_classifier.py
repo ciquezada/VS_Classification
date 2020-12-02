@@ -367,6 +367,7 @@ selected_features["hogs"] = ["period"]+[f"{x}" for x in range(3780)]
 # HOGS+FEATURES
 selected_features["hogs+rrlyr"] = selected_features["rrlyr"]+[f"{x}" for x in range(3780)]
 
+
 # Hyperparameters selection
 model_parameters = {}
 # RR Lyr model parameters preset
@@ -490,6 +491,8 @@ model_parameters["hogs+rrlyr"] = {'bootstrap': True,
                                  'verbose': 0,
                                  'warm_start': False}
 
+
+
 # Search parameters
 random_grid = {}
 
@@ -544,3 +547,8 @@ random_grid["hogs+rrlyr"] = {'max_features': max_features,
                        'min_samples_split': min_samples_split,
                        'min_samples_leaf': min_samples_leaf,
                        "class_weight": class_weight}
+
+# RRlyr+Braga
+selected_features["rrlyr+braga"] = selected_features["rrlyr"]+["MseBragaTemplate", "R2BragaTemplate"]
+model_parameters["rrlyr+braga"] = model_parameters["rrlyr"]
+random_grid["rrlyr+braga"] = random_grid["rrlyr"]
