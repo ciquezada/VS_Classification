@@ -7,7 +7,7 @@ from symfit.core.minimizers import DifferentialEvolution
 from sklearn.metrics import mean_squared_error
 
 
-class FitBragaTemplate(feets.Extractor):
+class FitBragaTemplateRRc(feets.Extractor):
     """
     **AC_std**
     ACF is an (complete) auto-correlation function
@@ -24,7 +24,7 @@ class FitBragaTemplate(feets.Extractor):
     """
 
     data = ["time", "magnitude", "error"]
-    features = ["R2BragaTemplate", "MseBragaTemplate"]
+    features = ["R2BragaTemplateRRc", "MseBragaTemplateRRc"]
     params = {"period": 1}
 
     def _template_inspect(self, time, magnitude, error, period, fit):
@@ -53,12 +53,7 @@ class FitBragaTemplate(feets.Extractor):
 
     def _get_template_params(self, period):
         params_data = pd.read_csv("Braga_templates.table", delim_whitespace = True)
-        if period <= 0.55:
-            return params_data.iloc[0, 1:-1].to_dict()
-        elif 0.55 < period and period < 0.7:
-            return params_data.iloc[1, 1:-1].to_dict()
-        elif 0.7 <= period:
-            return params_data.iloc[2, 1:-1].to_dict()
+        return params_data.iloc[3, 1:-1].to_dict()
 
     def _normalize_star_data(self, time, magnitude, error, period, t_sync, mag_mean, ampl, **params):
         phaser = lambda mjd, P: (mjd/P)%1.
@@ -122,4 +117,4 @@ class FitBragaTemplate(feets.Extractor):
         MseTemplate = mean_squared_error(normal_magnitude, normal_template(normal_time),
                                               sample_weight=None, squared=False)
 
-        return {"R2BragaTemplate": R2Template, "MseBragaTemplate": MseTemplate}
+        return {"R2BragaTemplateRRc": R2Template, "MseBragaTemplateRRc": MseTemplate}
