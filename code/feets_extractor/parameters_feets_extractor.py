@@ -259,4 +259,6 @@ selected_features["test"] = [
 selected_features["onlybraga"] = [
                                 'MseBragaTemplate',
                                 'R2BragaTemplate',
+                                'MseBragaTemplateRRc',
+                                'R2BragaTemplateRRc',
                                     ]
