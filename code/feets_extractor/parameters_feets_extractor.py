@@ -257,8 +257,8 @@ selected_features["test"] = [
 
 # onlybraga features preset
 selected_features["onlybraga"] = [
-                                'MseBragaTemplate',
-                                'R2BragaTemplate',
+                                'MseBragaTemplateRRab',
+                                'R2BragaTemplateRRab',
                                 'MseBragaTemplateRRc',
                                 'R2BragaTemplateRRc',
                                     ]
