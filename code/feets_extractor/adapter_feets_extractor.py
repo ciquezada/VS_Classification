@@ -5,7 +5,8 @@ from ext_inter_percentile_range import InterPercentileRanges
 from ext_magnitude_distribution import MagnitudeDistribution
 from ext_scipy_anderson_darling import SciPyAndersonDarling
 from ext_stats_model_tsa import StatsmodelTSA
-from ext_fit_braga_template import FitBragaTemplate
+from ext_fit_braga_template_rrab import FitBragaTemplateRRab
+from ext_fit_braga_template_rrc import FitBragaTemplateRRc
 import feets
 import numpy as np
 import pandas as pd
@@ -39,7 +40,8 @@ feets.register_extractor(StatsmodelTSA)
 feets.register_extractor(FitGP)
 feets.register_extractor(FitTemplate)
 feets.register_extractor(FitFourier)
-feets.register_extractor(FitBragaTemplate)
+feets.register_extractor(FitBragaTemplateRRab)
+feets.register_extractor(FitBragaTemplateRRc)
 
 def drop_err(star_data):
     emed = star_data.emag.median()
@@ -53,8 +55,10 @@ def get_feets_extra_params(selected_features, curve_period):
         params["FitGP"] = {"period": curve_period, "gamma": P.FitGP_gamma}
     if not set(selected_features).isdisjoint(P.template_dependent_features):
         params["FitTemplate"] = {"period": curve_period}
-    if not set(selected_features).isdisjoint(P.braga_template_dependent_features):
-        params["FitBragaTemplate"] = {"period": curve_period}
+    if not set(selected_features).isdisjoint(P.braga_template_rrab_dependent_features):
+        params["FitBragaTemplateRRab"] = {"period": curve_period}
+    if not set(selected_features).isdisjoint(P.braga_template_rrc_dependent_features):
+        params["FitBragaTemplateRRc"] = {"period": curve_period}
     if not set(selected_features).isdisjoint(P.fcomponents_dependent_features):
         params["FitFourier"] = {"period": curve_period, "gamma": P.FitFourier_gamma}
     return params
