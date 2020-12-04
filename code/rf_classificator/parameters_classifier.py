@@ -549,6 +549,6 @@ random_grid["hogs+rrlyr"] = {'max_features': max_features,
                        "class_weight": class_weight}
 
 # RRlyr+Braga
-selected_features["rrlyr+braga"] = selected_features["rrlyr"]+["MseBragaTemplate", "R2BragaTemplate"]
+selected_features["rrlyr+braga"] = selected_features["rrlyr"]+["MseBragaTemplateRRab", "R2BragaTemplateRRab", "MseBragaTemplateRRc", "R2BragaTemplateRRc"]
 model_parameters["rrlyr+braga"] = model_parameters["rrlyr"]
 random_grid["rrlyr+braga"] = random_grid["rrlyr"]
