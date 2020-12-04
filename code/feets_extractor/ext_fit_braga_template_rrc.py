@@ -92,7 +92,7 @@ class FitBragaTemplateRRc(feets.Extractor):
         # START FIT ##################
         t_sync = Parameter('t_sync', value=0, min=0, max=1, fixed=False)
         mag_mean = Parameter('mag_mean', value=14, min=10, max=20, fixed=False)
-        fit_ampl  = Parameter('ampl', value=guess_ampl, min=guess_ampl*.7, max=guess_ampl*1.3, fixed=False)
+        fit_ampl  = Parameter('ampl', value=guess_ampl, min=guess_ampl*.7, max=guess_ampl*1.3, fixed=True)
 
         t, y = variables('t, y')
         model_dict = {y: self._fourier_template(t, t_sync, mag_mean, P=1, N=7, A=fit_ampl, **template_params)}
