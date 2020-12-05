@@ -1,13 +1,13 @@
-import feets
+# import feets
 import math
 import numpy as np
 import pandas as pd
 from symfit import Parameter, parameters, variables, sin, cos, Fit
-from symfit.core.minimizers import DifferentialEvolution
+from symfit.core.minimizers import DifferentialEvolution, BFGS
 from sklearn.metrics import mean_squared_error
 
 
-class FitBragaTemplateRRab(feets.Extractor):
+class FitBragaTemplateRRab():# (feets.Extractor):  add this to work as feet.extractor
     """
 
     """
@@ -86,14 +86,16 @@ class FitBragaTemplateRRab(feets.Extractor):
         # START FIT ##################
         t_sync = Parameter('t_sync', value=0, min=0, max=1, fixed=False)
         mag_mean = Parameter('mag_mean', value=14, min=10, max=20, fixed=False)
-        fit_ampl  = Parameter('ampl', value=guess_ampl, min=guess_ampl*.7, max=guess_ampl*1.3, fixed=True)
+        # fit_ampl  = Parameter('ampl', value=guess_ampl, min=guess_ampl*.7, max=guess_ampl*1.3, fixed=True) # THIS NOT WORK ON SECUENTIAL MINIMIZER
+        fit_ampl = guess_ampl # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
 
         t, y = variables('t, y')
         model_dict = {y: self._fourier_template(t, t_sync, mag_mean, P=1, N=7, A=fit_ampl, **template_params)}
-        fit = Fit(model_dict, t=phase, y=magnitude, sigma_y = error, minimizer=DifferentialEvolution)
+        fit = Fit(model_dict, t=phase, y=magnitude, sigma_y = error, minimizer=[DifferentialEvolution, BFGS]) # secuential minimizer
 
         fit_result = fit.execute()
         params = fit_result.params
+        params["ampl"] = guess_ampl # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
         # END FIT ####################
 
         ## INSPECT
@@ -111,4 +113,6 @@ class FitBragaTemplateRRab(feets.Extractor):
         MseTemplate = mean_squared_error(normal_magnitude, normal_template(normal_time),
                                               sample_weight=None, squared=False)
 
-        return {"R2BragaTemplateRRab": R2Template, "MseBragaTemplateRRab": MseTemplate}
+        return {"R2BragaTemplateRRab": R2Template,
+                    "MseBragaTemplateRRab": MseTemplate,
+                        "t_sync": params["t_sync"]} # DELETE t_sync to work as a feets.Extractor

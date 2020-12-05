@@ -1,26 +1,14 @@
-import feets
+# import feets
 import math
 import numpy as np
 import pandas as pd
 from symfit import Parameter, parameters, variables, sin, cos, Fit
-from symfit.core.minimizers import DifferentialEvolution
+from symfit.core.minimizers import DifferentialEvolution, BFGS
 from sklearn.metrics import mean_squared_error
 
 
-class FitBragaTemplateRRc(feets.Extractor):
+class FitBragaTemplateRRc():# (feets.Extractor):  add this to work as feet.extractor
     """
-    **AC_std**
-    ACF is an (complete) auto-correlation function
-    which gives us values of auto-correlation of
-    any series with its lagged values. We plot
-    these values along with the confidence band and
-    tada! We have an ACF plot. In simple terms,
-    it describes how well the present value of the
-    series is related with its past values. A time
-    series can have components like trend, seasonality,
-    cyclic and residual. ACF considers all these
-    components while finding correlations hence
-    it’s a ‘complete auto-correlation plot’.
     """
 
     data = ["time", "magnitude", "error"]
@@ -82,7 +70,7 @@ class FitBragaTemplateRRc(feets.Extractor):
 
         return series * A + mag_mean
 
-    def fit(self, time, magnitude, error, period):
+    def fit(self, time, magnitude, error, period, guess_t_sync):
         phaser = lambda mjd, P: (mjd/P)%1.
         phase = phaser(time, period)
         # retrieve the amplitude limits
@@ -90,16 +78,20 @@ class FitBragaTemplateRRc(feets.Extractor):
         guess_ampl = self._iqr(magnitude)
 
         # START FIT ##################
-        t_sync = Parameter('t_sync', value=0, min=0, max=1, fixed=False)
+        # t_sync = Parameter('t_sync', value=0, min=0, max=1, fixed=False) # THIS NOT WORK ON SECUENTIAL MINIMIZER
+        t_sync = guess_t_sync # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
         mag_mean = Parameter('mag_mean', value=14, min=10, max=20, fixed=False)
-        fit_ampl  = Parameter('ampl', value=guess_ampl, min=guess_ampl*.7, max=guess_ampl*1.3, fixed=True)
+        # fit_ampl  = Parameter('ampl', value=guess_ampl, min=guess_ampl*.7, max=guess_ampl*1.3, fixed=True) # THIS NOT WORK ON SECUENTIAL MINIMIZER
+        fit_ampl = guess_ampl # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
 
         t, y = variables('t, y')
         model_dict = {y: self._fourier_template(t, t_sync, mag_mean, P=1, N=7, A=fit_ampl, **template_params)}
-        fit = Fit(model_dict, t=phase, y=magnitude, sigma_y = error, minimizer=DifferentialEvolution)
+        fit = Fit(model_dict, t=phase, y=magnitude, sigma_y = error, minimizer=[DifferentialEvolution, BFGS]) # secuential minimizer
 
         fit_result = fit.execute()
         params = fit_result.params
+        params["ampl"] = guess_ampl # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
+        params["t_sync"] = guess_t_sync # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
         # END FIT ####################
 
         ## INSPECT
