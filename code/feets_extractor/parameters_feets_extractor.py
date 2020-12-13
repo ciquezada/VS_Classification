@@ -7,7 +7,10 @@ gp_dependent_features = ["RiseRatio", "DownRatio",
                          "RiseDownRatio", "Tm"]
 template_dependent_features = ["R2Template", "MseTemplate",
                                "A1A2ratio"]
-braga_template_dependent_features = ["R2BragaTemplate", "MseBragaTemplate"]
+# braga_template_rrab_dependent_features = ["R2BragaTemplateRRab", "MseBragaTemplateRRab"]
+# braga_template_rrc_dependent_features = ["R2BragaTemplateRRc", "MseBragaTemplateRRc"]
+braga_template_dependent_features = ["R2BragaTemplateRRab", "MseBragaTemplateRRab",
+                                        "R2BragaTemplateRRc", "MseBragaTemplateRRc"]
 fcomponents_dependent_features = ['a0', 'a1', 'a2', 'a3',
                                   'a4', 'a5', 'a6', 'a7',
                                   'phi_1', 'phi_2', 'phi_3',
@@ -252,10 +255,13 @@ selected_features["test"] = [
                                 'R2Template',
                                  'iqr',
                                  'p41',
+                                 'MseBragaTemplateRRc'
                                     ]
 
 # onlybraga features preset
 selected_features["onlybraga"] = [
-                                'MseBragaTemplate',
-                                'R2BragaTemplate',
+                                'MseBragaTemplateRRab',
+                                'R2BragaTemplateRRab',
+                                'MseBragaTemplateRRc',
+                                'R2BragaTemplateRRc',
                                     ]
