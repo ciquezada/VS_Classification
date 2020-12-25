@@ -130,8 +130,8 @@ selected_features["rrlyr"] = [
          'p21',
          'p31',
          'p41',
-         'MseBragaTemplate',
-         'R2BragaTemplate',
+         # 'MseBragaTemplate',
+         # 'R2BragaTemplate',
             ]
 
 # Default features preset
