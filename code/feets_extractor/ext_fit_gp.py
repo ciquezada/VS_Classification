@@ -103,7 +103,7 @@ class FitGP(feets.Extractor):
         gp.compute(phase, error)
         return gp, best_gamma
 
-    @smooth_curve_data_with_loess
+    # @smooth_curve_data_with_loess
     def fit(self, time, magnitude, error, period, gamma):
         # retrieve the amplitude limits
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
