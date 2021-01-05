@@ -32,7 +32,9 @@ def run_ks_metallicity(i_args):
     RUN_CODE_STRING += f"{temp_folder}{os.sep}pymerlin_{i}.csv " # temp pymerlin file
     os.system(RUN_CODE_STRING)
 
-def run_only_pyfiner(i):
+def run_only_pyfiner(i_args):
+    i, args = i_args
+    temp_folder, output_pdf_folder = args
     RUN_CODE_STRING = "python Ks_metalicity.py " # command line
     RUN_CODE_STRING += f"{temp_folder}{os.sep}input_{i}.csv " # temp input file
     RUN_CODE_STRING += f"{temp_folder}{os.sep}output_{i}.csv " # temp output file
