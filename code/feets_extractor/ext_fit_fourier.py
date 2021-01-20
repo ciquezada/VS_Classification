@@ -74,7 +74,7 @@ class FitFourier(feets.Extractor):
         gp.compute(phase, error)
         return gp, best_gamma
 
-    # @normalize_curve_data
+    @normalize_curve_data
     # @smooth_curve_data_with_loess
     def fit(self, time, magnitude, error, period, gamma):
         # retrieve the amplitude limits
