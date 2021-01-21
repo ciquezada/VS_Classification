@@ -107,7 +107,7 @@ class FitFourier(feets.Extractor):
 
         t, y = variables('t, y')
         model_dict = {y: self._fourier_series(t, P=1, N=7, **guess_params)}
-        fit = Fit(model_dict, t=gp_xdata, y=gp_ydata, sigma_y = cov[1])
+        fit = Fit(model_dict, t=gp_xdata, y=gp_ydata)
         fit_result = fit.execute()
         params = fit_result.params
         # END FIT ####################
