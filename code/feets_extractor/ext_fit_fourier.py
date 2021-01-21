@@ -74,12 +74,12 @@ class FitFourier(feets.Extractor):
         gp.compute(phase, error)
         return gp, best_gamma
 
-    @normalize_curve_data
+    # @normalize_curve_data
     # @smooth_curve_data_with_loess
     def fit(self, time, magnitude, error, period, gamma):
         # retrieve the amplitude limits
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
-        gp_xdata = np.linspace(0, 2, 100)
+        gp_xdata = np.linspace(0, 2, 1000)
         gp_ydata, cov = fit.predict(magnitude, gp_xdata)
 
         phaser = lambda mjd, P: (mjd/P)%1.
