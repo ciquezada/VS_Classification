@@ -265,3 +265,6 @@ selected_features["onlybraga"] = [
                                 'MseBragaTemplateRRc',
                                 'R2BragaTemplateRRc',
                                     ]
+
+# GP_MSE
+selected_features["rrlyr+gp_mse"] = selected_features["rrlyr"]+["GP_mse"]

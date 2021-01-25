@@ -8,6 +8,7 @@ from scipy.signal import find_peaks
 from scipy import optimize
 from functools import reduce
 from loess_smoother import smooth_curve_data_with_loess
+from sklearn.metrics import mean_squared_error
 
 
 class FitGP(feets.Extractor):
@@ -28,7 +29,7 @@ class FitGP(feets.Extractor):
 
     data = ["time", "magnitude", "error"]
     features = ["GP_RiseRatio", "GP_DownRatio",
-                    "GP_RiseDownRatio", "GP_Skew"]
+                    "GP_RiseDownRatio", "GP_Skew", "GP_mse"]
     params = {"period": 1, "gamma": 0.1}
 
     def _gp_skew(self, magnitude, fit):
@@ -91,6 +92,15 @@ class FitGP(feets.Extractor):
         max_x = optimize.fmin(lambda x: fit.predict(magnitude, x)[0], max_x_candidate, disp = 0)[0]
         return 1 - (max_x - x0)
 
+    def _gp_mse(self, time, magnitude, period):
+        phaser = lambda mjd, P: (mjd/P)%1.
+        phase = phaser(time, period)
+        gp_mag, cov = fit.predict(magnitude, phase)
+        mse = mean_squared_error(magnitude, gp_mag,
+                                      sample_weight=None, squared=False)
+        return mse
+
+
     def _gaussian_process(self, time, magnitude, error, period, gamma):
         phaser = lambda mjd, P: (mjd/P)%1.
         phase = phaser(time, period)
@@ -111,6 +121,8 @@ class FitGP(feets.Extractor):
         gp_rise_ratio = self._gp_rise_ratio(magnitude, fit)
         gp_rise_down = gp_rise_ratio / gp_down_ratio
         gp_skew = self._gp_skew(magnitude, fit)
+        gp_mse = self._gp_mse(time, magnitude, period)
 
         return {"GP_RiseRatio": gp_rise_ratio, "GP_DownRatio": gp_down_ratio,
-                    "GP_RiseDownRatio": gp_rise_down, "GP_Skew": gp_skew}
+                    "GP_RiseDownRatio": gp_rise_down, "GP_Skew": gp_skew,
+                    "GP_mse": gp_mse}
