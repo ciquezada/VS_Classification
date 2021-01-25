@@ -92,7 +92,7 @@ class FitGP(feets.Extractor):
         max_x = optimize.fmin(lambda x: fit.predict(magnitude, x)[0], max_x_candidate, disp = 0)[0]
         return 1 - (max_x - x0)
 
-    def _gp_mse(self, time, magnitude, period):
+    def _gp_mse(self, time, magnitude, period, fit):
         phaser = lambda mjd, P: (mjd/P)%1.
         phase = phaser(time, period)
         gp_mag, cov = fit.predict(magnitude, phase)
@@ -121,7 +121,7 @@ class FitGP(feets.Extractor):
         gp_rise_ratio = self._gp_rise_ratio(magnitude, fit)
         gp_rise_down = gp_rise_ratio / gp_down_ratio
         gp_skew = self._gp_skew(magnitude, fit)
-        gp_mse = self._gp_mse(time, magnitude, period)
+        gp_mse = self._gp_mse(time, magnitude, period, fit)
 
         return {"GP_RiseRatio": gp_rise_ratio, "GP_DownRatio": gp_down_ratio,
                     "GP_RiseDownRatio": gp_rise_down, "GP_Skew": gp_skew,
