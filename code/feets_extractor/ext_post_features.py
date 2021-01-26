@@ -5,6 +5,7 @@ from sklearn.metrics import mean_squared_error
 from george import kernels
 import george
 import emcee
+import numpy as np
 
 
 class PostFeatures(feets.Extractor):
