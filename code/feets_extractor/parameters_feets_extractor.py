@@ -2,9 +2,10 @@
 
 FitGP_gamma = 0.1
 FitFourier_gamma = 0.1
+PostFeatures_gamma = 0.1
 # Extractor feature dependence
-gp_dependent_features = ["RiseRatio", "DownRatio",
-                         "RiseDownRatio", "Tm"]
+gp_dependent_features = ["GP_RiseRatio", "GP_DownRatio",
+                            "GP_RiseDownRatio", "GP_Skew", "GP_mse"]
 template_dependent_features = ["R2Template", "MseTemplate",
                                "A1A2ratio"]
 # braga_template_rrab_dependent_features = ["R2BragaTemplateRRab", "MseBragaTemplateRRab"]
@@ -17,6 +18,8 @@ fcomponents_dependent_features = ['a0', 'a1', 'a2', 'a3',
                                   'phi_4', 'phi_5', 'phi_6',
                                   'phi_7', 'a21', 'a31', 'a41',
                                   'p21', 'p31', 'p41']
+post_dependent_features = ["Post_MseRRab", "Post_MseRRc",
+                            "Post_GP_Mse", "Post_Sigma", "Post_Rho"]
 # Features selection
 selected_features = {}
 # RRlyr features preset
@@ -268,3 +271,12 @@ selected_features["onlybraga"] = [
 
 # GP_MSE
 selected_features["rrlyr+gp_mse"] = selected_features["rrlyr"]+["GP_mse"]
+
+#
+selected_features["rrlyr_postfeatures"] = [
+                                    "Post_Rho",
+                                    "Post_Sigma",
+                                    "Post_GP_Mse",
+                                    "Post_MseRRab",
+                                    "Post_MseRRc",
+                                     ]
