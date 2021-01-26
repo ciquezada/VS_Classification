@@ -33,9 +33,9 @@ class PostFeatures(feets.Extractor):
         lim_down = (gp_mag-sig*1.5)
         f_lim_up = gp_mag<lim_up
         f_lim_down = gp_mag>lim_down
-        return time[f_lim_up & f_lim_down],
-                 magnitude[f_lim_up & f_lim_down],
-                  error[f_lim_up & f_lim_down]
+        return (time[f_lim_up & f_lim_down],
+                magnitude[f_lim_up & f_lim_down],
+                error[f_lim_up & f_lim_down])
 
     def _gaussian_process(self, time, magnitude, error, period, gamma):
         phaser = lambda mjd, P: (mjd/P)%1.
