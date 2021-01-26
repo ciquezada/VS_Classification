@@ -1,6 +1,10 @@
 import feets
 from ext_fit_braga_template_rrab import FitBragaTemplateRRab
 from ext_fit_braga_template_rrc import FitBragaTemplateRRc
+from sklearn.metrics import mean_squared_error
+from george import kernels
+import george
+import emcee
 
 
 class PostFeatures(feets.Extractor):
