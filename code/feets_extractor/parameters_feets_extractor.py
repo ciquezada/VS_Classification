@@ -18,8 +18,8 @@ fcomponents_dependent_features = ['a0', 'a1', 'a2', 'a3',
                                   'phi_4', 'phi_5', 'phi_6',
                                   'phi_7', 'a21', 'a31', 'a41',
                                   'p21', 'p31', 'p41']
-post_dependent_features = ["Post_MseRRab", "Post_MseRRc",
-                            "Post_GP_Mse", "Post_Sigma", "Post_Rho"]
+post_dependent_features = ["post_mseRRab", "post_mseRRc",
+                            "post_GP_mse", "post_sigma", "post_rho"]
 # Features selection
 selected_features = {}
 # RRlyr features preset
