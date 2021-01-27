@@ -28,7 +28,7 @@ class PostFeatures(feets.Extractor):
                                       sample_weight=None, squared=False)
         return mse
 
-    def _drop_sigma(self, time, magnitude, period, fit):
+    def _drop_sigma(self, time, magnitude, error, period, fit):
         phaser = lambda mjd, P: (mjd/P)%1.
         phase = phaser(time, period)
         gp_mag, cov = fit.predict(magnitude, phase)
