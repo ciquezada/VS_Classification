@@ -57,7 +57,7 @@ class PostFeatures(feets.Extractor):
     def fit(self, time, magnitude, error, period, gamma):
         # retrieve the amplitude limits
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
-        time, magnitude, error = self._drop_sigma(time, magnitude, period, fit)
+        time, magnitude, error = self._drop_sigma(time, magnitude, error, period, fit)
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
 
         gp_mse = self._gp_mse(time, magnitude, period, fit)
