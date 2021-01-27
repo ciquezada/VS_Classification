@@ -73,5 +73,5 @@ class PostFeatures(feets.Extractor):
         params.update(params_c)
 
         post_features["Post_MseRRab"] = params["MseBragaTemplateRRab"]
-        post_features["Post_MseRRab"] = params["MseBragaTemplateRRc"]
+        post_features["Post_MseRRc"] = params["MseBragaTemplateRRc"]
         return post_features
