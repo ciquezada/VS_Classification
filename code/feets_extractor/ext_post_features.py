@@ -13,8 +13,8 @@ class PostFeatures(feets.Extractor):
     """
 
     data = ["time", "magnitude", "error"]
-    features = ["Post_MseRRab", "Post_MseRRc",
-                "Post_GP_Mse", "Post_Sigma", "Post_Rho"]
+    features = ["post_mseRRab", "post_mseRRc",
+                "post_GP_mse", "post_sigma", "post_rho"]
     params = {"period": 1, "gamma": 0.1}
 
     def _sigma(self, mag):
