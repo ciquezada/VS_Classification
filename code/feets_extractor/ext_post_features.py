@@ -63,8 +63,8 @@ class PostFeatures(feets.Extractor):
         gp_mse = self._gp_mse(time, magnitude, period, fit)
         sigma = self._sigma(magnitude)
         rho = sigma/gp_mse
-        post_features = {"Post_GP_Mse":gp_mse, "Post_Sigma":sigma,
-                                                            "Post_Rho":rho}
+        post_features = {"post_GP_mse":gp_mse, "post_sigma":sigma,
+                                                            "post_rho":rho}
 
         fit_ab = FitBragaTemplateRRab()
         fit_c = FitBragaTemplateRRc()
@@ -72,6 +72,6 @@ class PostFeatures(feets.Extractor):
         params_c = fit_c.fit(time, magnitude, error, period, params["t_sync"])
         params.update(params_c)
 
-        post_features["Post_MseRRab"] = params["MseBragaTemplateRRab"]
-        post_features["Post_MseRRc"] = params["MseBragaTemplateRRc"]
+        post_features["post_mseRRab"] = params["MseBragaTemplateRRab"]
+        post_features["post_mseRRc"] = params["MseBragaTemplateRRc"]
         return post_features
