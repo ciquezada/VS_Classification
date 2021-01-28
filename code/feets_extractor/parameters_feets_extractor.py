@@ -274,9 +274,9 @@ selected_features["rrlyr+gp_mse"] = selected_features["rrlyr"]+["GP_mse"]
 
 #
 selected_features["rrlyr_postfeatures"] = [
-                                    "Post_Rho",
-                                    "Post_Sigma",
-                                    "Post_GP_Mse",
-                                    "Post_MseRRab",
-                                    "Post_MseRRc",
+                                    "post_rho",
+                                    "post_sigma",
+                                    "post_GP_mse",
+                                    "post_mseRRab",
+                                    "post_mseRRc",
                                      ]
