@@ -1,6 +1,7 @@
 import feets
 import pandas as pd
 import numpy as np
+import math
 from ext_fit_braga_template_rrab import FitBragaTemplateRRab
 from ext_fit_braga_template_rrc import FitBragaTemplateRRc
 from george import kernels
@@ -22,8 +23,15 @@ class PostFeatures(feets.Extractor):
     features = ["post_mseRRab", "post_mseRRc",
                 "post_GP_mse", "post_sigma", "post_rho",
                 "post_GP_RiseRatio", "post_GP_DownRatio",
-                "post_GP_RiseDownRatio", "post_GP_Skew"]
+                "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio"]
     params = {"period": 1, "gamma": 0.1}
+
+    def _iqr(self, magnitude):
+        N = len(magnitude)
+        sorted_mag = np.sort(magnitude)
+        max5p = np.median(sorted_mag[-int(math.ceil(0.05 * N)) :])
+        min5p = np.median(sorted_mag[0 : int(math.ceil(0.05 * N))])
+        return max5p - min5p
 
     def _gp_skew(self, magnitude, fit):
         xdata = np.linspace(0, 1)
@@ -120,13 +128,16 @@ class PostFeatures(feets.Extractor):
 
         sigma = self._sigma(magnitude)
         rho = sigma/gp_mse
+        amplitud = self._iqr(magnitude)
+        sn_ratio = amplitud*np.sqrt(len(time))/sigma
         post_features = {"post_GP_mse":gp_mse,
                             "post_sigma":sigma,
                             "post_rho":rho,
                             "post_GP_RiseRatio": gp_rise_ratio,
                             "post_GP_DownRatio": gp_down_ratio,
                             "post_GP_RiseDownRatio": gp_rise_down,
-                            "post_GP_Skew": gp_skew
+                            "post_GP_Skew": gp_skew,
+                            "post_SN_ratio": sn_ratio
                             }
 
         fit_ab = FitBragaTemplateRRab()
