@@ -72,7 +72,7 @@ def extract_curve_features(curve_data, selected_features):
     ks_star_data = pd.read_csv(curve_ks_path,
                                 names=["mjd", "mag", "emag"],
                                         delim_whitespace=True)
-    ks_star_data = drop_err(ks_star_data, period)
+    ks_star_data = drop_err(ks_star_data, curve_period)
     params = get_feets_extra_params(selected_features, curve_period)
     fs = feets.FeatureSpace(data=["time", "magnitude", "error"],
                         only=selected_features,
