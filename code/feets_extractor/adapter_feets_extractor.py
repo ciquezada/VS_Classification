@@ -13,6 +13,7 @@ import pandas as pd
 import sys
 import os
 import parameters_feets_extractor as P
+from drop_sigma import drop_err_sigma_gp
 
 
 '''
@@ -44,6 +45,7 @@ feets.register_extractor(FitBragaTemplate)
 feets.register_extractor(PostFeatures)
 
 
+@drop_err_sigma_gp
 def drop_err(star_data):
     emed = star_data.emag.median()
     esig = star_data.emag.std()
@@ -70,7 +72,7 @@ def extract_curve_features(curve_data, selected_features):
     ks_star_data = pd.read_csv(curve_ks_path,
                                 names=["mjd", "mag", "emag"],
                                         delim_whitespace=True)
-    ks_star_data = drop_err(ks_star_data)
+    ks_star_data = drop_err(ks_star_data, period)
     params = get_feets_extra_params(selected_features, curve_period)
     fs = feets.FeatureSpace(data=["time", "magnitude", "error"],
                         only=selected_features,
