@@ -117,7 +117,7 @@ class PostFeatures(feets.Extractor):
         return gp, best_gamma
 
     # @drop_sigma_loess
-    @drop_sigma_gp
+    # @drop_sigma_gp
     def fit(self, time, magnitude, error, period, gamma):
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
         gp_down_ratio = self._gp_down_ratio(magnitude, fit)
@@ -129,7 +129,7 @@ class PostFeatures(feets.Extractor):
         sigma = self._sigma(magnitude)
         rho = sigma/gp_mse
         amplitud = self._iqr(magnitude)
-        sn_ratio = amplitud*np.sqrt(len(time))/sigma
+        sn_ratio = amplitud*np.sqrt(len(time))/gp_mse
         post_features = {"post_GP_mse":gp_mse,
                             "post_sigma":sigma,
                             "post_rho":rho,
