@@ -120,8 +120,7 @@ class PostFeatures(feets.Extractor):
     def _alias_score(self, time, period):
         phaser = lambda mjd, P: (mjd/P)%1.
         phase = phaser(time, period)
-        bins = plt.hist(phase, bins=75, range=(0, 1))[0]
-        plt.close()
+        bins = np.histogram(phase, bins=75, range=(0, 1))[0]
         return len(bins[bins==0])
 
     # @drop_sigma_loess
