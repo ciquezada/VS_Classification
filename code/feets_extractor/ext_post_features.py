@@ -124,7 +124,7 @@ class PostFeatures(feets.Extractor):
         return len(bins[bins==0])
 
     # @drop_sigma_loess
-    @drop_sigma_gp
+    # @drop_sigma_gp
     def fit(self, time, magnitude, error, period, gamma):
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
         gp_down_ratio, n_peaks = self._gp_down_ratio(magnitude, fit)
