@@ -23,7 +23,8 @@ class PostFeatures(feets.Extractor):
     features = ["post_mseRRab", "post_mseRRc",
                 "post_GP_mse", "post_sigma", "post_rho",
                 "post_GP_RiseRatio", "post_GP_DownRatio",
-                "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio"]
+                "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio",
+                "post_N_peaks"]
     params = {"period": 1, "gamma": 0.1}
 
     def _iqr(self, magnitude):
@@ -91,7 +92,7 @@ class PostFeatures(feets.Extractor):
         max_x_candidate = phase_df.x.iloc[peaks[-1]]
 
         max_x = optimize.fmin(lambda x: fit.predict(magnitude, x)[0], max_x_candidate, disp = 0)[0]
-        return 1 - (max_x - x0)
+        return 1 - (max_x - x0), len(peaks)
 
     def _sigma(self, mag):
         return np.std(mag)
@@ -120,7 +121,7 @@ class PostFeatures(feets.Extractor):
     @drop_sigma_gp
     def fit(self, time, magnitude, error, period, gamma):
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
-        gp_down_ratio = self._gp_down_ratio(magnitude, fit)
+        gp_down_ratio, n_peaks = self._gp_down_ratio(magnitude, fit)
         gp_rise_ratio = self._gp_rise_ratio(magnitude, fit)
         gp_rise_down = gp_rise_ratio / gp_down_ratio
         gp_skew = self._gp_skew(magnitude, fit)
@@ -137,7 +138,8 @@ class PostFeatures(feets.Extractor):
                             "post_GP_DownRatio": gp_down_ratio,
                             "post_GP_RiseDownRatio": gp_rise_down,
                             "post_GP_Skew": gp_skew,
-                            "post_SN_ratio": sn_ratio
+                            "post_SN_ratio": sn_ratio,
+                            "post_N_peaks": n_peaks
                             }
 
         fit_ab = FitBragaTemplateRRab()
