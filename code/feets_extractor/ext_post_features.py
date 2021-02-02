@@ -120,7 +120,7 @@ class PostFeatures(feets.Extractor):
     def _alias_score(self, time, period):
         phaser = lambda mjd, P: (mjd/P)%1.
         phase = phaser(time, period)
-        bins = plt.hist(phase, bins=75)[0]
+        bins = plt.hist(phase, bins=75, range=(0, 1))[0]
         plt.close()
         return len(bins[bins==0])
 
