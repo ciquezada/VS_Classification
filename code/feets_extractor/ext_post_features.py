@@ -24,7 +24,7 @@ class PostFeatures(feets.Extractor):
                 "post_GP_mse", "post_sigma", "post_rho",
                 "post_GP_RiseRatio", "post_GP_DownRatio",
                 "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio",
-                "post_N_peaks"]
+                "post_N_peaks", "post_alias_score"]
     params = {"period": 1, "gamma": 0.1}
 
     def _iqr(self, magnitude):
@@ -117,6 +117,13 @@ class PostFeatures(feets.Extractor):
         gp.compute(phase, error)
         return gp, best_gamma
 
+    def _alias_score(self, time, period):
+        phaser = lambda mjd, P: (mjd/P)%1.
+        phase = phaser(time, period)
+        bins = plt.hist(phase, bins=75)[0]
+        plt.close()
+        return len(bins[bins==0])
+
     # @drop_sigma_loess
     @drop_sigma_gp
     def fit(self, time, magnitude, error, period, gamma):
@@ -126,6 +133,7 @@ class PostFeatures(feets.Extractor):
         gp_rise_down = gp_rise_ratio / gp_down_ratio
         gp_skew = self._gp_skew(magnitude, fit)
         gp_mse = self._gp_mse(time, magnitude, period, fit)
+        alias_score = self._alias_score(time, period)
 
         sigma = self._sigma(magnitude)
         rho = sigma/gp_mse
@@ -139,7 +147,8 @@ class PostFeatures(feets.Extractor):
                             "post_GP_RiseDownRatio": gp_rise_down,
                             "post_GP_Skew": gp_skew,
                             "post_SN_ratio": sn_ratio,
-                            "post_N_peaks": n_peaks
+                            "post_N_peaks": n_peaks,
+                            "post_alias_score": alias_score
                             }
 
         fit_ab = FitBragaTemplateRRab()
