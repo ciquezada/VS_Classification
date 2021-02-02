@@ -45,7 +45,7 @@ feets.register_extractor(FitBragaTemplate)
 feets.register_extractor(PostFeatures)
 
 
-# @drop_err_sigma_gp
+@drop_err_sigma_gp
 def drop_err(star_data, *args, **kwargs):
     emed = star_data.emag.median()
     esig = star_data.emag.std()

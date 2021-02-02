@@ -21,8 +21,8 @@ fcomponents_dependent_features = ['a0', 'a1', 'a2', 'a3',
 post_dependent_features = ["post_mseRRab", "post_mseRRc",
                             "post_GP_mse", "post_sigma", "post_rho",
                             "post_GP_RiseRatio", "post_GP_DownRatio",
-                            "post_GP_RiseDownRatio", "post_GP_Skew",
-                            "post_SN_ratio"]
+                            "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio",
+                            "post_N_peaks", "post_alias_score"]
 # Features selection
 selected_features = {}
 # RRlyr features preset
@@ -279,5 +279,5 @@ selected_features["rrlyr+gp_mse"] = selected_features["rrlyr"]+["GP_mse"]
 selected_features["rrlyr_postfeatures"] = ["post_mseRRab", "post_mseRRc",
                                             "post_GP_mse", "post_sigma", "post_rho",
                                             "post_GP_RiseRatio", "post_GP_DownRatio",
-                                            "post_GP_RiseDownRatio", "post_GP_Skew",
-                                            "post_SN_ratio"]
+                                            "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio",
+                                            "post_N_peaks", "post_alias_score"]
