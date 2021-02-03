@@ -11,8 +11,8 @@ def classify(model, data, selected_features):
     y_pred = predict_proba.idxmax(axis=1)
     y_prob = predict_proba.max(axis=1)
     y_classification = data[["filename"]].copy()
-    y_classification["y_pred"] = y_pred
-    y_classification["y_prob"] = y_prob
+    y_classification["pred"] = y_pred
+    y_classification["prob"] = y_prob
     y_classification = pd.concat([y_classification, predict_proba], axis=1)
     return y_classification
 
