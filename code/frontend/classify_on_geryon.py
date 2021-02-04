@@ -182,7 +182,7 @@ def modify_params_interface(params):
         print(PROGRAM_TITLE)
         params = rectify(params)
         if i >= 3:
-            election = 'ELECTION'
+            final_election = 'ELECTION'
             while final_election not in ['y', 'n', 'p', 'q', '']:
                 print("Confirmar ejecucion")
                 final_election = input("(y or ENTER) yes, (n) no, (p) previous, (q) quit: \n")
@@ -199,7 +199,7 @@ def modify_params_interface(params):
                 print( '-'*40)
                 exit()
                 break
-        final_election = "ELECTION"
+        election = "ELECTION"
         election_msg = ["Parametros Iniciales", "Extractor de Features", "Clasificador"]
         print(f"Paso {i+1}/{3}: {election_msg[i]}")
         pprint(params[i])
