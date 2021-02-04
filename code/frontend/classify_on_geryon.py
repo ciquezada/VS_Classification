@@ -13,7 +13,7 @@ PROGRAM_TITLE += '*'*40+"\n"
 PROGRAM_TITLE += '-'*40+"\n"
 
 
-def get_run_script(params):
+def get_run_script(params, i):
     RUN_script = ""
 
     #init
@@ -23,14 +23,24 @@ def get_run_script(params):
     num_proc = params[0]["4.- Numero de procesos"]
     vs_classificator_dir = params[0]["5.- Carpeta que contiene VS_Classification"]
 
-    RUN_geryon_header = f"""#!/bin/bash
+    if i==-1:
+        RUN_geryon_header = f"""#!/bin/bash
 #
 #PBS -V
 #PBS -N {execution_title}
 #PBS -k eo
-#PBS -l nodes=2:ppn=1
-#PBS -l walltime=3:00:00
+#PBS -l nodes=3:ppn=20
+#PBS -l walltime=4:00:00
     """
+    else:
+            RUN_geryon_header = f"""#!/bin/bash
+#
+#PBS -V
+#PBS -N {execution_title}
+#PBS -k eo
+#PBS -l nodes=1:ppn=1
+#PBS -l walltime=3:00:00
+        """
     RUN_init = f"""
 TITLE=\"{execution_title}\"
 
@@ -43,7 +53,7 @@ OUTPUT_DIR=\"{output_dir}/$TITLE\"
 
     RUN_script = RUN_geryon_header + RUN_init
 
-    if params[1]["1.- Extraer features"] or params[1]["2.- Extraer postfeatures"]:
+    if int(params[1]["1.- Extraer features"]) or int(params[1]["2.- Extraer postfeatures"]):
         curve_file = params[1]["3.- Archivo con curvas (DataFrame)"]
         RUN_extract_features_0 = f"""
 # .var to DataFrame
@@ -75,9 +85,9 @@ Extractor Mode: $FEATURES_EXTRACTOR_MODE\"
 LOG_END=\"TERMINADO
 PROGRAM: $PROGRAM
 features en $FEATURES_OUTPUT \"
-python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG\"
+{'' if not i else '#'}python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG\"
 python $PROGRAM $NUM_PROC $DATA_DIR $CURVES_FILE $FEATURES_OUTPUT $FEATURES_EXTRACTOR_MODE
-python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG_END\"
+{'' if not i else '#'}python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG_END\"
 
         """
         RUN_script += RUN_extract_features_1
@@ -98,9 +108,9 @@ Extractor Mode: $POSTFEATURES_EXTRACTOR_MODE\"
 LOG_END=\"TERMINADO
 PROGRAM: $PROGRAM
 features en $POSTFEATURES_OUTPUT \"
-python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG\"
+{'' if not i else '#'}python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG\"
 python $PROGRAM $NUM_PROC $DATA_DIR $CURVES_FILE $POSTFEATURES_OUTPUT $POSTFEATURES_EXTRACTOR_MODE
-python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG_END\"
+{'' if not i else '#'}python {vs_classificator_dir}/VS_Classification/code/monitoring/send_email.py \"$TITLE\" \"$LOG_END\"
 
         """
         RUN_script += RUN_extract_features_2
@@ -229,12 +239,70 @@ def modify_params_interface(params):
             break
     return params
 
-def run_on_geryon(params):
+def write_join_features_python(params, subdir_list):
+    execution_title = params[0]["1.- Nombre del sample (sin espacios)"]
+    output_dir = params[0]["3.- Donde guardar la carpeta output"]
+    output_dir = f"{output_dir}{os.sep}{execution_title}"
+    new_python_script = f"{output_dir}{os.sep}join_features.py"
+    subdir_list = ",\n".join(['\"'+dir+'\"' for dir in subdir_list])
+    python_str = f"""
+import pandas as pd
+import numpy as np
+
+
+subdir_list = [{subdir_list}]
+"""
+    python_str += """
+curves_df = pd.concat([pd.read_csv(f\"{dir}{os.sep}curves.csv\", sep=\" \")
+                            for dir in subdir_list], ignore_index=True)
+"""
+    python_str += f"""
+curves_df.to_csv(\"{output_dir}{os.sep}curves.csv\", sep=\" \", index=False)
+del(curves_df)
+"""
+
+    if params[1]["1.- Extraer features"]:
+        python_str += """
+features_df = pd.concat([pd.read_csv(f\"{dir}{os.sep}features.csv\", sep=\" \")
+                                    for dir in subdir_list], ignore_index=True)
+"""
+        python_str += f"""
+features_df.to_csv(\"{output_dir}{os.sep}features.csv\", sep=\" \", index=False)
+del(features_df)
+"""
+    if params[1]["2.- Extraer postfeatures"]:
+        python_str += """
+postfeatures_df = pd.concat([pd.read_csv(f\"{dir}{os.sep}postfeatures.csv\", sep=\" \")
+                                    for dir in subdir_list], ignore_index=True)
+"""
+        python_str += f"""
+postfeatures_df.to_csv(\"{output_dir}{os.sep}postfeatures.csv\", sep=\" \", index=False)
+del(features_df)
+"""
+    python_str = python_str.replace("\\", "\\\\")
+    with open(f"{new_python_script}", "w") as fout:
+        fout.write(python_str)
+
+def write_final_classify_script(params):
+    execution_title = params[0]["1.- Nombre del sample (sin espacios)"]
+    output_dir = params[0]["3.- Donde guardar la carpeta output"]
+    output_dir = f"{output_dir}{os.sep}{execution_title}"
+    new_run_script = f"{output_dir}{os.sep}submit_classification.sh"
+    new_params = [params[0].copy(), params[1].copy(), params[2].copy()]
+    new_params[1]["1.- Extraer features"] = 0
+    new_params[1]["2.- Extraer postfeatures"] = 0
+    RUN_script = get_run_script(new_params, -1)
+    with open(f"{new_run_script}", "w") as fout:
+        fout.write(RUN_script)
+
+def run_on_geryon_extract_features(params):
+    subdir_list = []
+    if not int(params[1]["1.- Extraer features"]) and not int(params[1]["2.- Extraer postfeatures"]):
+        return subdir_list
     execution_title = params[0]["1.- Nombre del sample (sin espacios)"]
     output_dir = params[0]["3.- Donde guardar la carpeta output"]
     num_proc = int(params[0]["4.- Numero de procesos"])
     curve_file = params[1]["3.- Archivo con curvas (DataFrame)"]
-
 
     new_output_dir = f"{output_dir}{os.sep}{execution_title}"
     os.system(f'mkdir {new_output_dir}')
@@ -244,19 +312,41 @@ def run_on_geryon(params):
     for i in range(num_proc):
         new_execution_title = f"{execution_title}_{i}"
         new_run_script = f"{new_output_dir}{os.sep}run_{new_execution_title}.sh"
-        new_num_proc = 2
+        new_num_proc = 1
         new_curve_file = f"{new_output_dir}{os.sep}{new_execution_title}_curves.csv"
         input_df.iloc[chunksize*i:chunksize*(i+1),:].to_csv(
                                         f"{new_curve_file}", index=False, sep=" ")
-        new_params = params.copy()
+        new_params = [params[0].copy(), params[1].copy(), params[2].copy()]
         new_params[0]["1.- Nombre del sample (sin espacios)"] = new_execution_title
         new_params[0]["3.- Donde guardar la carpeta output"] = new_output_dir
         new_params[0]["4.- Numero de procesos"] = new_num_proc
         new_params[1]["3.- Archivo con curvas (DataFrame)"] = new_curve_file
-        RUN_script = get_run_script(params)
+        new_params[2]["1.- Clasificar"] = 0
+        RUN_script = get_run_script(params, i)
         with open(f"{new_run_script}", "w") as fout:
             fout.write(RUN_script)
-        os.system(f"qsub {new_run_script}")
+        # os.system(f"qsub {new_run_script}")
+        subdir_list.append(f"{new_output_dir}{os.sep}{new_execution_title}")
+    return subdir_list
+
+def write_final_script(params, subdir_list):
+    execution_title = params[0]["1.- Nombre del sample (sin espacios)"]
+    output_dir = params[0]["3.- Donde guardar la carpeta output"]
+    output_dir = f"{output_dir}{os.sep}{execution_title}"
+    RUN_script = f"""
+cd {output_dir}
+
+"""
+    if int(params[1]["1.- Extraer features"]) or int(params[1]["2.- Extraer postfeatures"]):
+        write_join_features_python(params, subdir_list)
+        RUN_script += "python join_features.py\n"
+    if int(params[2]["1.- Clasificar"]):
+        write_final_classify_script(params)
+        RUN_script += f"qsub submit_classification.sh\n"
+    RUN_script += f"echo 'done!'"
+    with open(f"{output_dir}{os.sep}FINAL_SCRIPT.sh", "w") as fout:
+        fout.write(RUN_script)
+    os.system(f"chmod u+x {output_dir}{os.sep}FINAL_SCRIPT.sh")
 
 if __name__=="__main__":
     if len(sys.argv)>1:
@@ -273,7 +363,8 @@ if __name__=="__main__":
         params = modify_params_interface(params)
     with open('previous_classify_params.txt', 'w') as outfile:
         json.dump(params, outfile)
-    run_on_geryon(params)
+    subdir_list = run_on_geryon_extract_features(params)
+    write_final_script(params, subdir_list)
     print( '*'*40)
     print( '-'*40)
     exit()
