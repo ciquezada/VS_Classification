@@ -1,0 +1,21 @@
+[
+  {
+    "1.- Nombre del sample (sin espacios)": "Nombre_del_sample",
+    "2.- Carpeta con .dat s": "/path/to/.dat/folder",
+    "3.- Donde guardar la carpeta output": "/path/to/save/output/folder",
+    "4.- Numero de procesos": 20,
+    "5.- Carpeta que contiene VS_Classification": "~"
+  },
+  {
+    "1.- Extraer features": 1,
+    "2.- Extraer postfeatures": 1,
+    "3.- Archivo con curvas (DataFrame)": "/path/to/curve/file",
+    "4.- Seleccion de features": "rrlyr",
+    "5.- Seleccion de postfeatures": "rrlyr_postfeatures"
+  },
+  {
+    "1.- Clasificar": 1,
+    "2.- Archivo con training features": "/path/to/train/file",
+    "3.- Modo del Clasificador": "rrlyr"
+  }
+]
