@@ -231,7 +231,7 @@ def modify_params_interface(params):
 
 if __name__=="__main__":
     if len(sys.argv)>1:
-        if sys.argv[1]=="previuos":
+        if sys.argv[1]=="previous":
             with open("previous_classify_params.txt", 'r') as infile:
                 params = json.load(infile)
             params = modify_params_interface(params)
