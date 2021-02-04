@@ -1,8 +1,6 @@
 import os
 import json
 import sys
-import pandas as pd
-import numpy as np
 from pprint import pprint
 
 
@@ -11,7 +9,6 @@ PROGRAM_TITLE += '*'*40+"\n"
 PROGRAM_TITLE += '          VS_Classification'+"\n"
 PROGRAM_TITLE += '*'*40+"\n"
 PROGRAM_TITLE += '-'*40+"\n"
-
 
 def get_run_script(params):
     RUN_script = ""
@@ -28,7 +25,7 @@ def get_run_script(params):
 #PBS -V
 #PBS -N {execution_title}
 #PBS -k eo
-#PBS -l nodes=2:ppn=1
+#PBS -l nodes=1:ppn=1
 #PBS -l walltime=3:00:00
     """
     RUN_init = f"""
@@ -227,36 +224,8 @@ def modify_params_interface(params):
             print( '-'*40)
             exit()
             break
+
     return params
-
-def run_on_geryon(params):
-    execution_title = params[0]["1.- Nombre del sample (sin espacios)"]
-    output_dir = params[0]["3.- Donde guardar la carpeta output"]
-    num_proc = int(params[0]["4.- Numero de procesos"])
-    curve_file = params[1]["3.- Archivo con curvas (DataFrame)"]
-
-
-    new_output_dir = f"{output_dir}{os.sep}{execution_title}"
-    os.system(f'mkdir {new_output_dir}')
-    # splitting input file
-    input_df = pd.read_csv(curve_file, sep=" ")
-    chunksize = int(np.ceil(input_df.shape[0]/num_proc))
-    for i in range(num_proc):
-        new_execution_title = f"{execution_title}_{i}"
-        new_run_script = f"{new_output_dir}{os.sep}run_{new_execution_title}.sh"
-        new_num_proc = 2
-        new_curve_file = f"{new_output_dir}{os.sep}{new_execution_title}_curves.csv"
-        input_df.iloc[chunksize*i:chunksize*(i+1),:].to_csv(
-                                        f"{new_curve_file}", index=False, sep=" ")
-        new_params = params.copy()
-        new_params[0]["1.- Nombre del sample (sin espacios)"] = new_execution_title
-        new_params[0]["3.- Donde guardar la carpeta output"] = new_output_dir
-        new_params[0]["4.- Numero de procesos"] = new_num_proc
-        new_params[1]["3.- Archivo con curvas (DataFrame)"] = new_curve_file
-        RUN_script = get_run_script(params)
-        with open(f"{new_run_script}", "w") as fout:
-            fout.write(RUN_script)
-        os.system(f"qsub {new_run_script}")
 
 if __name__=="__main__":
     if len(sys.argv)>1:
@@ -273,7 +242,11 @@ if __name__=="__main__":
         params = modify_params_interface(params)
     with open('previous_classify_params.txt', 'w') as outfile:
         json.dump(params, outfile)
-    run_on_geryon(params)
+    RUN_script = get_run_script(params)
+    with open("temp_classify_on_geryon.sh", "w") as fout:
+        fout.write(RUN_script)
+    os.system("chmod u+x temp_classify_on_geryon.sh")
+    os.system("./temp_classify_on_geryon.sh")
     print( '*'*40)
     print( '-'*40)
     exit()
