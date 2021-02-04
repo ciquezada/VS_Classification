@@ -207,7 +207,7 @@ def modify_params_interface(params):
         if election == 'q':
             print( '-'*40)
             print( '*'*40)
-            print( 'Abortando VS_Classification')
+            print( '    Abortando VS_Classification')
             print( '*'*40)
             print( '-'*40)
             exit()
