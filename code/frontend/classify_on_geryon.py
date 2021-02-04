@@ -261,7 +261,7 @@ def run_on_geryon(params):
 if __name__=="__main__":
     if len(sys.argv)>1:
         if sys.argv[1]=="previous":
-            with open("/home/ciquezada/VS_Classification/code/frontent/previous_classify_params.txt", 'r') as infile:
+            with open("/home/ciquezada/VS_Classification/code/frontend/previous_classify_params.txt", 'r') as infile:
                 params = json.load(infile)
             params = modify_params_interface(params)
         else:
