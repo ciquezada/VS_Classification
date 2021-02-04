@@ -1,2 +1,3 @@
 __pycache__
-temp_geryon_classify.sh
+temp_classify_on_geryon.sh
+previous_classify_params.txt
