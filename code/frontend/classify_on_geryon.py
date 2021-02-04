@@ -322,7 +322,7 @@ def run_on_geryon_extract_features(params):
         new_params[0]["4.- Numero de procesos"] = new_num_proc
         new_params[1]["3.- Archivo con curvas (DataFrame)"] = new_curve_file
         new_params[2]["1.- Clasificar"] = 0
-        RUN_script = get_run_script(params, i)
+        RUN_script = get_run_script(new_params, i)
         with open(f"{new_run_script}", "w") as fout:
             fout.write(RUN_script)
         os.system(f"qsub {new_run_script}")
@@ -347,7 +347,7 @@ cd {output_dir}
     with open(f"{output_dir}{os.sep}FINAL_SCRIPT.sh", "w") as fout:
         fout.write(RUN_script)
     os.system(f"chmod u+x {output_dir}{os.sep}FINAL_SCRIPT.sh")
-    print(f"\nNo olvides ejecutar\n{output_dir}{os.sep}FINAL_SCRIPT.sh")
+    print(f"\nNo olvides ejecutar:\n{output_dir}{os.sep}FINAL_SCRIPT.sh")
     print("Cuando terminen todos los procesos de Geryon2\n")
 
 if __name__=="__main__":
