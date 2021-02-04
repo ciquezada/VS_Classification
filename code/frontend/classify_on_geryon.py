@@ -348,7 +348,7 @@ cd {output_dir}
         fout.write(RUN_script)
     os.system(f"chmod u+x {output_dir}{os.sep}FINAL_SCRIPT.sh")
     print(f"\nNo olvides ejecutar\n{output_dir}{os.sep}FINAL_SCRIPT.sh")
-    print("Cuando terminen todos los procesos de Geryon2\")
+    print("Cuando terminen todos los procesos de Geryon2\n")
 
 if __name__=="__main__":
     if len(sys.argv)>1:
