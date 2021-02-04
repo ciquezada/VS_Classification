@@ -29,11 +29,11 @@ def get_run_script(params):
 #PBS -l walltime=3:00:00
     """
     RUN_init = f"""
-TITLE='{execution_title}'
+TITLE=\"{execution_title}\"
 
-NUM_PROC='{num_proc}'
-DATA_DIR='{data_dir}'
-OUTPUT_DIR='{output_dir}/$TITLE'
+NUM_PROC=\"{num_proc}\"
+DATA_DIR=\"{data_dir}\"
+OUTPUT_DIR=\"{output_dir}/$TITLE\"
 
 # INIT
 cd {vs_classificator_dir}/VS_Classification/code/monitoring
@@ -47,37 +47,37 @@ cd {vs_classificator_dir}/VS_Classification/code/monitoring
         RUN_extract_features_0 = f"""
 # .var to DataFrame
 cd {vs_classificator_dir}/VS_Classification/code/monitoring
-CURVES='{curve_file}'
-CURVES_FILE='$OUTPUT_DIR/curves.csv'
+CURVES=\"{curve_file}\"
+CURVES_FILE=\"$OUTPUT_DIR/curves.csv\"
 
-mkdir '$OUTPUT_DIR'
-cp '$CURVES' '$CURVES_FILE'
+mkdir \"$OUTPUT_DIR\"
+cp \"$CURVES\" \"$CURVES_FILE\"
 # EXTRACT_FEATURES
 cd ../feets_extractor
-PROGRAM='extract_features.py'
+PROGRAM=\"extract_features.py\"
         """
         RUN_script += RUN_extract_features_0
 
     if params[1]["1.- Extraer features"]:
         features_mode = params[1]["4.- Seleccion de features"]
         RUN_extract_features_1 = f"""
-FEATURES_OUTPUT='$OUTPUT_DIR/features.csv'
-FEATURES_EXTRACTOR_MODE='{features_mode}'
+FEATURES_OUTPUT=\"$OUTPUT_DIR/features.csv\"
+FEATURES_EXTRACTOR_MODE=\"{features_mode}\"
 
 # FEATURES
-LOG='INICIADO
+LOG=\"INICIADO
 PROGRAM: $PROGRAM
 Procceses: $NUMPROC
 Curves Dir: $DATA_DIR
 Curves File: $CURVES_FILE
 OUTPUT: $FEATURES_OUTPUT
-Extractor Mode: $FEATURES_EXTRACTOR_MODE'
-LOG_END='TERMINADO
+Extractor Mode: $FEATURES_EXTRACTOR_MODE\"
+LOG_END=\"TERMINADO
 PROGRAM: $PROGRAM
-features en $FEATURES_OUTPUT '
-python ../monitoring/send_email.py '$TITLE' '$LOG'
+features en $FEATURES_OUTPUT \"
+python ../monitoring/send_email.py \"$TITLE\" \"$LOG\"
 python $PROGRAM $NUM_PROC $DATA_DIR $CURVES_FILE $FEATURES_OUTPUT $FEATURES_EXTRACTOR_MODE
-python ../monitoring/send_email.py '$TITLE' '$LOG_END'
+python ../monitoring/send_email.py \"$TITLE\" \"$LOG_END\"
 
         """
         RUN_script += RUN_extract_features_1
@@ -85,22 +85,22 @@ python ../monitoring/send_email.py '$TITLE' '$LOG_END'
         postfeatures_mode = params[1]["5.- Seleccion de postfeatures"]
         RUN_extract_features_2 = f"""
 # POSTFEATURES
-POSTFEATURES_OUTPUT='$OUTPUT_DIR/postfeatures.csv'
-POSTFEATURES_EXTRACTOR_MODE='{postfeatures_mode}'
+POSTFEATURES_OUTPUT=\"$OUTPUT_DIR/postfeatures.csv\"
+POSTFEATURES_EXTRACTOR_MODE=\"{postfeatures_mode}\"
 
-LOG='INICIADO
+LOG=\"INICIADO
 PROGRAM: $PROGRAM
 Procceses: $NUMPROC
 Curves Dir: $DATA_DIR
 Curves File: $CURVES_FILE
 OUTPUT: $POSTFEATURES_OUTPUT
-Extractor Mode: $POSTFEATURES_EXTRACTOR_MODE'
-LOG_END='TERMINADO
+Extractor Mode: $POSTFEATURES_EXTRACTOR_MODE\"
+LOG_END=\"TERMINADO
 PROGRAM: $PROGRAM
-features en $POSTFEATURES_OUTPUT '
-python ../monitoring/send_email.py '$TITLE' '$LOG'
+features en $POSTFEATURES_OUTPUT \"
+python ../monitoring/send_email.py \"$TITLE\" \"$LOG\"
 python $PROGRAM $NUM_PROC $DATA_DIR $CURVES_FILE $POSTFEATURES_OUTPUT $POSTFEATURES_EXTRACTOR_MODE
-python ../monitoring/send_email.py '$TITLE' '$LOG_END'
+python ../monitoring/send_email.py \"$TITLE\" \"$LOG_END\"
 
         """
         RUN_script += RUN_extract_features_2
@@ -111,29 +111,29 @@ python ../monitoring/send_email.py '$TITLE' '$LOG_END'
         RUN_classify = f"""
 # CLASSIFY ONLYRR
 cd ../rf_classificator
-PROGRAM='classify.py'
-FEATURES_FILE='$OUTPUT_DIR/features.csv'
-PRESET_MODE='{classify_mode}'
-TRAIN_FEATURES='{train_file}'
-RESULTS_FILE='$OUTPUT_DIR/results.csv'
+PROGRAM=\"classify.py\"
+FEATURES_FILE=\"$OUTPUT_DIR/features.csv\"
+PRESET_MODE=\"{classify_mode}\"
+TRAIN_FEATURES=\"{train_file}\"
+RESULTS_FILE=\"$OUTPUT_DIR/results.csv\"
 
-LOG_MSG='INICIADO
+LOG_MSG=\"INICIADO
 Proccesors: $NUM_PROC
 Train Features: $TRAIN_FEATURES
 Features File: $FEATURES_FILE
 Output: $RESULTS_FILE
-Preset Mode: $PRESET_MODE'
-LOG_MSG_END='TERMINADO
-CV en $OUTPUT_DIR'
-python ../monitoring/send_email.py '$PROGRAM $TITLE' '$LOG_MSG'
+Preset Mode: $PRESET_MODE\"
+LOG_MSG_END=\"TERMINADO
+CV en $OUTPUT_DIR\"
+python ../monitoring/send_email.py \"$PROGRAM $TITLE\" \"$LOG_MSG\"
 python $PROGRAM $NUM_PROC $TRAIN_FEATURES $FEATURES_FILE $RESULTS_FILE $PRESET_MODE
-python ../monitoring/send_email.py '$PROGRAM $TITLE' '$LOG_MSG_END'
+python ../monitoring/send_email.py \"$PROGRAM $TITLE\" \"$LOG_MSG_END\"
 
         """
         RUN_script += RUN_classify
 
     RUN_end = """
-echo 'done!'
+echo \"done!\"
     """
     RUN_script += RUN_end
     return RUN_script
@@ -182,8 +182,22 @@ def modify_params_interface(params):
         print(PROGRAM_TITLE)
         params = rectify(params)
         if i >= 3:
-            break
-
+            while election not in ['y', 'n', 'p', 'q', '']:
+                print("Confirmar ejecucion")
+                election = input("(y or ENTER) yes, (n) no, (p) previous, (q) quit: \n")
+            if election == 'y' or election == '':
+                break
+            elif election == 'p' or election == 'n':
+                i = i - 1
+                continue
+            elif election == 'q':
+                print( '-'*40)
+                print( '*'*40)
+                print( '    Abortando VS_Classification')
+                print( '*'*40)
+                print( '-'*40)
+                exit()
+                break
         election = 'ELECTION'
         election_msg = ["Parametros Iniciales", "Extractor de Features", "Clasificador"]
         print(f"Paso {i+1}/{3}: {election_msg[i]}")
@@ -196,15 +210,15 @@ def modify_params_interface(params):
             print(PROGRAM_TITLE)
             print(f"Paso {i+1}/{3}: {election_msg[i]}")
             params[i] = modify_params(params[i])
-        if election == '' or election == "n":
+        elif election == '' or election == "n":
             i = i + 1
-        if election == 'p':
+        elif election == 'p':
             if i == 0:
                 # print( 'No hay pasos previos a este!!')
                 continue
             i = i - 1
             continue
-        if election == 'q':
+        elif election == 'q':
             print( '-'*40)
             print( '*'*40)
             print( '    Abortando VS_Classification')
@@ -212,6 +226,7 @@ def modify_params_interface(params):
             print( '-'*40)
             exit()
             break
+
     return params
 
 if __name__=="__main__":
@@ -219,6 +234,7 @@ if __name__=="__main__":
         if sys.argv[1]=="previuos":
             with open("previous_classify_params.txt", 'r') as infile:
                 params = json.load(infile)
+            params = modify_params_interface(params)
         else:
             params_file = sys.argv[1]
             with open(params_file, 'r') as infile:
