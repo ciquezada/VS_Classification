@@ -125,9 +125,9 @@ Output: $RESULTS_FILE
 Preset Mode: $PRESET_MODE\"
 LOG_MSG_END=\"TERMINADO
 CV en $OUTPUT_DIR\"
-python ../monitoring/send_email.py \"$PROGRAM $TITLE\" \"$LOG_MSG\"
+python ../monitoring/send_email.py \"$TITLE\" \"$LOG_MSG\"
 python $PROGRAM $NUM_PROC $TRAIN_FEATURES $FEATURES_FILE $RESULTS_FILE $PRESET_MODE
-python ../monitoring/send_email.py \"$PROGRAM $TITLE\" \"$LOG_MSG_END\"
+python ../monitoring/send_email.py \"$TITLE\" \"$LOG_MSG_END\"
 
         """
         RUN_script += RUN_classify
@@ -182,15 +182,16 @@ def modify_params_interface(params):
         print(PROGRAM_TITLE)
         params = rectify(params)
         if i >= 3:
-            while election not in ['y', 'n', 'p', 'q', '']:
+            election = 'ELECTION'
+            while final_election not in ['y', 'n', 'p', 'q', '']:
                 print("Confirmar ejecucion")
-                election = input("(y or ENTER) yes, (n) no, (p) previous, (q) quit: \n")
-            if election == 'y' or election == '':
+                final_election = input("(y or ENTER) yes, (n) no, (p) previous, (q) quit: \n")
+            if final_election == 'y' or final_election == '':
                 break
-            elif election == 'p' or election == 'n':
+            elif final_election == 'p' or final_election == 'n':
                 i = i - 1
                 continue
-            elif election == 'q':
+            elif final_election == 'q':
                 print( '-'*40)
                 print( '*'*40)
                 print( '    Abortando VS_Classification')
@@ -198,7 +199,7 @@ def modify_params_interface(params):
                 print( '-'*40)
                 exit()
                 break
-        election = 'ELECTION'
+        final_election = "ELECTION"
         election_msg = ["Parametros Iniciales", "Extractor de Features", "Clasificador"]
         print(f"Paso {i+1}/{3}: {election_msg[i]}")
         pprint(params[i])
