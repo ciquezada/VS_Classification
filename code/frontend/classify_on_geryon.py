@@ -4,6 +4,12 @@ import sys
 from pprint import pprint
 
 
+PROGRAM_TITLE = '-'*40+"\n"
+PROGRAM_TITLE += '*'*40+"\n"
+PROGRAM_TITLE += '          VS_Classification'+"\n"
+PROGRAM_TITLE += '*'*40+"\n"
+PROGRAM_TITLE += '-'*40+"\n"
+
 def get_run_script(params):
     RUN_script = ""
 
@@ -173,6 +179,7 @@ def modify_params_interface(params):
     i = 0
     while True:
         os.system("clear")
+        print(PROGRAM_TITLE)
         params = rectify(params)
         if i >= 3:
             break
@@ -186,6 +193,7 @@ def modify_params_interface(params):
 
         if election == 'y':
             os.system("clear")
+            print(PROGRAM_TITLE)
             print(f"Paso {i+1}/{3}: {election_msg[i]}")
             params[i] = modify_params(params[i])
         if election == '' or election == "n":
