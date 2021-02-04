@@ -29,7 +29,7 @@ def get_run_script(params, i):
 #PBS -V
 #PBS -N {execution_title}
 #PBS -k eo
-#PBS -l nodes=3:ppn=20
+#PBS -l nodes=2:ppn=10
 #PBS -l walltime=4:00:00
     """
     else:
