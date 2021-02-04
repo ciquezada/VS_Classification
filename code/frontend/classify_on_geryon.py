@@ -325,7 +325,7 @@ def run_on_geryon_extract_features(params):
         RUN_script = get_run_script(params, i)
         with open(f"{new_run_script}", "w") as fout:
             fout.write(RUN_script)
-        # os.system(f"qsub {new_run_script}")
+        os.system(f"qsub {new_run_script}")
         subdir_list.append(f"{new_output_dir}{os.sep}{new_execution_title}")
     return subdir_list
 
@@ -347,6 +347,8 @@ cd {output_dir}
     with open(f"{output_dir}{os.sep}FINAL_SCRIPT.sh", "w") as fout:
         fout.write(RUN_script)
     os.system(f"chmod u+x {output_dir}{os.sep}FINAL_SCRIPT.sh")
+    print(f"\nNo olvides ejecutar\n{output_dir}{os.sep}FINAL_SCRIPT.sh")
+    print("Cuando terminen todos los procesos de Geryon2\")
 
 if __name__=="__main__":
     if len(sys.argv)>1:
