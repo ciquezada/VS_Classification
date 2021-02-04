@@ -172,7 +172,7 @@ def modify_params(params):
 def modify_params_interface(params):
     i = 0
     while True:
-        os.system("cls")
+        os.system("clear")
         params = rectify(params)
         if i >= 3:
             break
@@ -185,7 +185,7 @@ def modify_params_interface(params):
             election = input("Modificar?: (y) yes, (n or ENTER) no, (p) previous, (q) quit: \n")
 
         if election == 'y':
-            os.system("cls")
+            os.system("clear")
             print(f"Paso {i+1}/{3}: {election_msg[i]}")
             params[i] = modify_params(params[i])
         if election == '' or election == "n":
@@ -202,6 +202,7 @@ def modify_params_interface(params):
             print( 'Abortando VS_Classification')
             print( '*'*40)
             print( '-'*40)
+            exit()
             break
     return params
 
