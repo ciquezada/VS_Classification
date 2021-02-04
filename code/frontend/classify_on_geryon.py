@@ -25,7 +25,7 @@ def get_run_script(params):
 #PBS -V
 #PBS -N {execution_title}
 #PBS -k eo
-#PBS -l nodes=2:ppn=10
+#PBS -l nodes=3:ppn=20
 #PBS -l walltime=3:00:00
     """
     RUN_init = f"""
@@ -249,3 +249,6 @@ if __name__=="__main__":
     with open("temp_classify_on_geryon.sh", "w") as fout:
         fout.write(RUN_script)
     os.system("qsub temp_classify_on_geryon.sh")
+    print( '*'*40)
+    print( '-'*40)
+    exit()
