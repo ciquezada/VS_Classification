@@ -1,2 +1,2 @@
 cd ~/VS_Classification/code/frontend
-python classify_on_geryon.py previous
+python VS_classify_geryon2.py previous
