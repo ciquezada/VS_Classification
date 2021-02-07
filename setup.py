@@ -33,7 +33,7 @@ setup(
         "scikit-learn",
         "sympy",
         "george",
-        "pybind11"
+        "pybind11",
         "emcee",
         "statsmodels",
         "astropy",
