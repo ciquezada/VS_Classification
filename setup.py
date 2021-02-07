@@ -203,6 +203,7 @@ if __name__=="__main__":
             "scikit-learn",
             "sympy",
             "george",
+            "pybind11"
             "emcee",
             "statsmodels",
             "astropy",
