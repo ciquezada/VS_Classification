@@ -98,6 +98,7 @@ def os_mkdir(output_folder):
 def clean_mess(output_folder):
     files_to_clean = [
             f"{output_folder}{os.sep}precurves.csv",
+            f"{output_folder}{os.sep}curves.csv",
             f"{output_folder}{os.sep}postfeatures.csv",
             f"{output_folder}{os.sep}results.csv",
             f"{output_folder}{os.sep}param.json"
