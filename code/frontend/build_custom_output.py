@@ -41,7 +41,7 @@ def build_output(var_path, features_path, postfeatures_path,
                                                         "GP_RiseDownRatio", "GP_DownRatio"]]
     postfeatures_df = pd.read_csv(postfeatures_path, sep=" ")[["filename", "post_N_peaks", "post_SN_ratio",
                                                                 "post_alias_score", "post_mseRRab",
-                                                                    "post_mseRRc",# "post_N_points"
+                                                                    "post_mseRRc", "post_N_points"
                                                                     ]]
     results_df = pd.read_csv(results_path, sep=" ")[["filename", "RRab"]]
 
@@ -54,7 +54,7 @@ def build_output(var_path, features_path, postfeatures_path,
                             "post_mseRRc", 'NPoints1', #"post_N_points",
                             "post_N_peaks", "post_alias_score"]]
     out_df.columns = ["ID", "Ks", "Amp", "AoV1", "Prob", "Q", "S/N",
-                        "R/D", "D", "Skew", "MSErrab", "MSErrc", "NPoints1", #"NPoints2",
+                        "R/D", "D", "Skew", "MSErrab", "MSErrc", "NPoints1", "NPoints2",
                          "Nofmax", "Nbins"]
     out_df.to_csv(out_df, sep=" ", index=False)
 

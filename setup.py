@@ -69,7 +69,7 @@ def get_params(output_folder, var_path, dat_path, num_proc, training_features):
                         "1.- Clasificar": 1,
                         "2.- Archivo con features": f"{output_folder}{os.sep}features.csv",
                         "3.- Archivo con training features": training_features,
-                        "4.- Modo del Clasificador": "rrlyr"
+                        "4.- Modo del Clasificador": "rrlyr_lite"
                            }]
     custom_output_paramns =  {
                                 "(INPUT)  Archivo .var": var_path,
@@ -95,6 +95,19 @@ def os_mkdir(output_folder):
             print(f"Cambiando carpeta output a: {output_folder}")
     return output_folder
 
+def clean_mess(output_folder):
+    files_to_clean = [
+            f"{output_folder}{os.sep}precurves.csv",
+            f"{output_folder}{os.sep}postfeatures.csv",
+            f"{output_folder}{os.sep}results.csv",
+            f"{output_folder}{os.sep}param.json"
+            ]
+    for fil in files_to_clean:
+        try:
+            os.remove(fil)
+        except:
+            print("Error while deleting file : ", fil)
+
 if __name__=="__main__":
     print(PROGRAM_TITLE)
     if len(sys.argv)<3 and 0:
@@ -116,6 +129,7 @@ if __name__=="__main__":
         with open(f"{output_folder}{os.sep}param.json", 'w', encoding="utf-8") as outfile:
             json.dump(param, outfile)
         os.system(f"{script} {output_folder}{os.sep}param.json")
+    clean_mess(output_folder)
     input("(ENTER) to continue.\\n")
     print( '*'*40)
     print( '-'*40)
