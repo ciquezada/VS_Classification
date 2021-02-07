@@ -1,21 +1,47 @@
+#Features extractor params
 [
   {
-    "1.- Nombre del sample (sin espacios)": "Nombre_del_sample",
-    "2.- Carpeta con .dat s": "/path/to/.dat/folder",
-    "3.- Donde guardar la carpeta output": "/path/to/save/output/folder",
-    "4.- Numero de procesos": 20,
-    "5.- Carpeta que contiene VS_Classification": "~"
+    "1.- Nombre del sample (Carpeta con outputs)(sin espacios)": "Nombre_del_sample",
+    "2.- Donde guardar la carpeta output": "/path/to/save/output/folder",
+    "3.- Numero de procesos": 20,
   },
   {
     "1.- Extraer features": 1,
     "2.- Extraer postfeatures": 1,
     "3.- Archivo con curvas (DataFrame)": "/path/to/curve/file",
-    "4.- Seleccion de features": "rrlyr",
-    "5.- Seleccion de postfeatures": "rrlyr_postfeatures"
+    "4.- Carpeta con .dat s": "/path/to/.dat/folder",
+    "5.- Seleccion de features": "rrlyr",
+    "6.- Seleccion de postfeatures": "rrlyr_postfeatures"
+  }
+]
+
+# Classify params
+[
+  {
+    "1.- Nombre del sample (Carpeta con outputs)(sin espacios)": "Nombre_del_sample",
+    "2.- Donde guardar la carpeta output": "/path/to/save/output/folder",
+    "3.- Numero de procesos": 20,
+    "4.- Carpeta que contiene VS_Classification": "~"
   },
   {
     "1.- Clasificar": 1,
-    "2.- Archivo con training features": "/path/to/train/file",
-    "3.- Modo del Clasificador": "rrlyr"
+    "2.- Archivo con features": "/path/to/features/file",
+    "3.- Archivo con training features": "/path/to/train/file",
+    "4.- Modo del Clasificador": "rrlyr"
   }
 ]
+
+# Var to DataFrame params
+{
+  "(INPUT)  Archivo .var": "/path/to/.var",
+  "(OUTPUT) DataFrame de curvas": "/path/to/.dat/folder"
+}
+
+# Build Custom output params
+{
+  "(INPUT)  Archivo .var":  "/path/to/.var",
+  "(INPUT)  Archivo con features": "/path/to/features",
+  "(INPUT)  Archivo con postfeatures": "/path/to/postfeatures",
+  "(INPUT)  Archivo con results": "/path/to/results",
+  "(OUTPUT) DataFrame output": "/path/to/output""
+}
