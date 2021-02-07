@@ -148,7 +148,7 @@ def export_to_script(params):
     RUN_script = params_to_script(params)
     with open(f"{cwd}{os.sep}last_extract_features_script.sh", "w", encoding="utf-8") as fout:
         fout.write(RUN_script)
-    os.system(f"chmod u+x \"{cwd}{os.sep}last_extract_features_script.sh")
+    os.system(f"chmod u+x \"{cwd}{os.sep}last_extract_features_script.sh\"")
 
 def get_default_params():
     initial_params = {"1.- Nombre del sample (Carpeta con outputs)(sin espacios)": "Nombre_del_sample",
