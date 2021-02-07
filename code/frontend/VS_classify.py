@@ -48,7 +48,7 @@ def run_pipeline(params):
         # EXTRACT_FEATURES
         print()
         os.chdir(f"{vs_classificator_dir}{os.sep}code{os.sep}rf_classificator")
-        print("Clasificando...", end='', flush=True)
+        print("Clasificando...  ", end='', flush=True)
         os.system(f"python classify.py \"{num_proc}\" \"{train_file}\" \"{features_file}\" \"{results_output}\" \"{classify_mode}\"")
         print("OK")
 
@@ -212,10 +212,10 @@ def absolute_params(params):
     return params
 
 def vs_classify_front():
-    clear_screen()
     prev_params_path = f'{cwd}{os.sep}prev_classify_params.txt'
     params = get_params(prev_params_path)
     if len(sys.argv)==1:
+        clear_screen()
         params = modify_params_interface(params)
     with open(prev_params_path, 'w', encoding="utf-8") as outfile:
         json.dump(params, outfile)
@@ -223,10 +223,11 @@ def vs_classify_front():
     export_to_script(params)
     run_pipeline(params)
     print("\nDone!")
-    input("(ENTER) to continue.\n")
 
 if __name__=="__main__":
     vs_classify_front()
-    print( '*'*40)
-    print( '-'*40)
+    if len(sys.argv)==1:
+        input("(ENTER) to continue.\n")
+        print( '*'*40)
+        print( '-'*40)
     exit()

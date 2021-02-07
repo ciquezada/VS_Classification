@@ -99,20 +99,21 @@ def get_params(params_file):
     return params
 
 def vs_var_to_dataframe_front():
-    clear_screen()
     prev_params_path = f'{cwd}{os.sep}prev_var2df_params.txt'
     params = get_params(prev_params_path)
     if len(sys.argv)==1:
+        clear_screen()
         params = modify_params_interface(params)
     with open(prev_params_path, 'w', encoding="utf-8") as outfile:
         json.dump(params, outfile)
     var_to_dataframe(params["(INPUT)  Archivo .var"],
                     params["(OUTPUT) DataFrame de curvas"])
+    print("\nDone!")
 
 if __name__=="__main__":
     vs_var_to_dataframe_front()
-    print("\nDone!")
-    input("(ENTER) to continue.\n")
-    print( '*'*40)
-    print( '-'*40)
+    if len(sys.argv)==1:
+        input("(ENTER) to continue.\n")
+        print( '*'*40)
+        print( '-'*40)
     exit()

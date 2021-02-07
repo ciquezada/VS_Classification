@@ -190,10 +190,10 @@ def absolute_params(params):
     return params
 
 def vs_classify_front():
-    clear_screen()
     prev_params_path = f'{cwd}{os.sep}prev_classify_params.txt'
     params = get_params(prev_params_path)
     if len(sys.argv)==1:
+        clear_screen()
         params = modify_params_interface(params)
     with open(prev_params_path, 'w', encoding="utf-8") as outfile:
         json.dump(params, outfile)
@@ -203,10 +203,11 @@ def vs_classify_front():
         fout.write(RUN_script)
     os.system(f"qsub \"{cwd}{os.sep}last_classify_geryon2_script.sh\"")
     print("\nDone!")
-    input("(ENTER) to continue.\n")
 
 if __name__=="__main__":
     vs_classify_front()
-    print( '*'*40)
-    print( '-'*40)
+    if len(sys.argv)==1:
+        input("(ENTER) to continue.\n")
+        print( '*'*40)
+        print( '-'*40)
     exit()

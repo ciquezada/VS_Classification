@@ -51,13 +51,13 @@ def run_pipeline(params):
         if params[1]["1.- Extraer features"]:
             features_mode = params[1]["5.- Seleccion de features"]
             features_output = f"{output_folder}{os.sep}features.csv"
-            print("Extrayendo features...", end='', flush=True)
+            print("Extrayendo features...  ", end='', flush=True)
             os.system(f"python extract_features.py \"{num_proc}\" \"{data_dir}\" \"{curves_output}\" \"{features_output}\" \"{features_mode}\"")
             print("OK")
         if params[1]["2.- Extraer postfeatures"]:
             postfeatures_mode = params[1]["6.- Seleccion de postfeatures"]
             postfeatures_output = f"{output_folder}{os.sep}postfeatures.csv"
-            print("Extrayendo postfeatures...", end='', flush=True)
+            print("Extrayendo postfeatures...  ", end='', flush=True)
             os.system(f"python extract_features.py \"{num_proc}\" \"{data_dir}\" \"{curves_output}\" \"{postfeatures_output}\" \"{postfeatures_mode}\"")
             print("OK")
 
@@ -251,10 +251,10 @@ def absolute_params(params):
     return params
 
 def vs_extract_features_front():
-    clear_screen()
     prev_params_path = f'{cwd}{os.sep}prev_extract_features_params.txt'
     params = get_params(prev_params_path)
     if len(sys.argv)==1:
+        clear_screen()
         params = modify_params_interface(params)
     with open(prev_params_path, 'w', encoding="utf-8") as outfile:
         json.dump(params, outfile)
@@ -262,10 +262,11 @@ def vs_extract_features_front():
     export_to_script(params)
     run_pipeline(params)
     print("\nDone!")
-    input("(ENTER) to continue.\n")
 
 if __name__=="__main__":
     vs_extract_features_front()
-    print( '*'*40)
-    print( '-'*40)
+    if len(sys.argv)==1:
+        input("(ENTER) to continue.\n")
+        print( '*'*40)
+        print( '-'*40)
     exit()
