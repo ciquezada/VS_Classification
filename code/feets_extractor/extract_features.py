@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import shutil
 from multiprocessing import Pool
 
 
@@ -76,4 +77,4 @@ if __name__=="__main__":
     output_df.to_csv(output_file, sep=" ", index=False)
     # cleaning mess
     if os.path.exists(temp_folder):
-        os.system(f'rm -r {temp_folder}')
+        shutil.rmtree(temp_folder, ignore_errors=True)
