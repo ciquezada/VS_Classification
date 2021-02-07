@@ -50,7 +50,7 @@ pipeline = [f"python \\"{vs_frontend_dir}{os.sep}var_to_dataframe.py\\"",
 def get_params(output_folder, var_path, dat_path, num_proc, training_features):
     init_params = {
                     "1.- Nombre del sample (Carpeta con outputs)(sin espacios)": f"{output_folder}",
-                    "2.- Donde guardar la carpeta output": os.path.abspath(f"{os.path.dirname(__file__)}"),
+                    "2.- Donde guardar la carpeta output": os.getcwd(),
                     "3.- Numero de procesos": num_proc
                     }
     var2df_params = {"(INPUT)  Archivo .var": var_path,
