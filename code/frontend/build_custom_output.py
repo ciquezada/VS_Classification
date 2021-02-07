@@ -32,7 +32,7 @@ def clear_screen():
     print(PROGRAM_TITLE)
 
 def build_output(var_path, features_path, postfeatures_path,
-                                                results_path, out_df):
+                                                results_path, out_df_path):
     names = ['filename','Q','AoV1','NPoints1']
     usecols = (0, 11, 12, 17)
     var_df = pd.read_csv(var_path, delim_whitespace=True, skiprows=1,
@@ -56,7 +56,7 @@ def build_output(var_path, features_path, postfeatures_path,
     out_df.columns = ["ID", "Ks", "Amp", "AoV1", "Prob", "Q", "S/N",
                         "R/D", "D", "Skew", "MSErrab", "MSErrc", "NPoints1", "NPoints2",
                          "Nofmax", "Nbins"]
-    out_df.to_csv(out_df, sep=" ", index=False)
+    out_df.to_csv(out_df_path, sep=" ", index=False)
 
 
 def modify_params(params):
