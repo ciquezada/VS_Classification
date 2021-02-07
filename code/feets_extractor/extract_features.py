@@ -25,7 +25,7 @@ def period_selection(selection, df):
 def os_mkdir(folder_name):
     # making needed directories
     gen = (x for x in range(1,99999))
-    aux_folder_name = folder_name
+    aux_folder_name = folder_name[:-1]
     while True:
         try:
             os.mkdir(folder_name)
@@ -56,7 +56,7 @@ if __name__=="__main__":
         input_df["label"] = curves_df.label
     del(curves_df)
     # making needed directories
-    temp_folder = os_mkdir(temp_folder)
+    temp_folder = os_mkdir("temp_0")
     # splitting input file
     chunksize = int(np.ceil(input_df.shape[0]/num_proc))
     for i in range(num_proc):
