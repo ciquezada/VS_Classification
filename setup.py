@@ -29,16 +29,16 @@ setup(
 
     # Dependent packages (distributions)
     install_requires=[
-        "numpy",
-        "scipy",
-        "pandas",
-        "astropy",
-        "statsmodels",
-        "emcee",
-        "george",
-        "symfit",
-        "sympy",
-        "scikit-learn",
         "feets",
+        "scikit-learn",
+        "sympy",
+        "george",
+        "emcee",
+        "statsmodels",
+        "astropy",
+        "symfit",
+        "pandas",
+        "scipy",
+        "numpy",
     ],
 )
