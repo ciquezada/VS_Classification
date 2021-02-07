@@ -24,7 +24,7 @@ class PostFeatures(feets.Extractor):
                 "post_GP_mse", "post_sigma", "post_rho",
                 "post_GP_RiseRatio", "post_GP_DownRatio",
                 "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio",
-                "post_N_peaks", "post_alias_score"]
+                "post_N_peaks", "post_alias_score", "post_N_points"]
     params = {"period": 1, "gamma": 0.1}
 
     def _iqr(self, magnitude):
@@ -137,6 +137,7 @@ class PostFeatures(feets.Extractor):
         sigma = self._sigma(magnitude)
         rho = sigma/gp_mse
         amplitud = self._iqr(magnitude)
+        n_points = len(time)
         sn_ratio = amplitud*np.sqrt(len(time))/gp_mse
         post_features = {"post_GP_mse":gp_mse,
                             "post_sigma":sigma,
@@ -147,7 +148,8 @@ class PostFeatures(feets.Extractor):
                             "post_GP_Skew": gp_skew,
                             "post_SN_ratio": sn_ratio,
                             "post_N_peaks": n_peaks,
-                            "post_alias_score": alias_score
+                            "post_alias_score": alias_score,
+                            "post_N_points": n_points
                             }
 
         fit_ab = FitBragaTemplateRRab()
