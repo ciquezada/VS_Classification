@@ -18,7 +18,7 @@ setup(
     include_package_data=True,
 
     # Details
-    url=""#"http://pypi.python.org/pypi/MyApplication_v010/",
+    url="",#"http://pypi.python.org/pypi/MyApplication_v010/",
 
     #
     # license="LICENSE.txt",
