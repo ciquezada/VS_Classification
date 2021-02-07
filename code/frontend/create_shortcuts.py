@@ -1,13 +1,13 @@
 import os
 
 
-TRAINING_FEATURES_PATH = "data\\vvv_shortp_train+onlyrr+gp_drop\\features.csv" # PARA VS_lite
+TRAINING_FEATURES_PATH = "../../data/vvv_shortp_train+onlyrr+gp_drop/features.csv" # PARA VS_lite
 
 VS_DIR = os.path.abspath(f"{os.path.dirname(__file__)}")
 TRAINING_FEATURES_PATH = os.path.abspath(TRAINING_FEATURES_PATH)
 
 def export_to_script(script, name):
-    with open(f"{VS_DIR}{os.sep}{name}", "w", encoding="utf-8") as fout:
+    with open(f"{VS_DIR}{os.sep}..{os.sep}..{os.sep}{name}", "w", encoding="utf-8") as fout:
         fout.write(script)
 
 def get_vs_lite_script():
@@ -37,7 +37,7 @@ PROGRAM_TITLE += '-'*40+'\\n'
 
 """
 
-    VS_lite_script += f"vs_frontend_dir = \"{VS_DIR}{os.sep}code{os.sep}frontend\"".replace("\\", "\\\\")
+    VS_lite_script += f"vs_frontend_dir = \"{VS_DIR}\"".replace("\\", "\\\\")
 
     VS_lite_script += """
 
@@ -143,7 +143,7 @@ def get_vs_advance_script():
 
 
 """
-    VS_advance_script += f"vs_frontend_dir = \"{VS_DIR}{os.sep}code{os.sep}frontend\"".replace("\\", "\\\\")
+    VS_advance_script += f"vs_frontend_dir = \"{VS_DIR}\"".replace("\\", "\\\\")
     VS_advance_script += """
 if __name__=="__main__":
     os.system(f"python \\"{vs_frontend_dir}{os.sep}VS_advance_mode.py\\"")
