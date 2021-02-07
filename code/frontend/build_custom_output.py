@@ -46,12 +46,12 @@ def build_output(var_path, features_path, postfeatures_path,
     results_df = pd.read_csv(results_path, sep=" ")[["filename", "RRab"]]
 
     out_df = pd.merge(left=var_df, right=features_df, on="filename")
-    out_df = pd.merge(left=var_df, right=postfeatures_df, on="filename")
-    out_df = pd.merge(left=var_df, right=results_df, on="filename")
+    out_df = pd.merge(left=out_df, right=postfeatures_df, on="filename")
+    out_df = pd.merge(left=out_df, right=results_df, on="filename")
     out_df = out_df[['filename', "a0", "iqr", 'AoV1', "RRab", 'Q',
                         "post_SN_ratio", "GP_RiseDownRatio",
                          "GP_DownRatio", "GP_Skew", "post_mseRRab",
-                            "post_mseRRc", 'NPoints1', #"post_N_points",
+                            "post_mseRRc", 'NPoints1', "post_N_points",
                             "post_N_peaks", "post_alias_score"]]
     out_df.columns = ["ID", "Ks", "Amp", "AoV1", "Prob", "Q", "S/N",
                         "R/D", "D", "Skew", "MSErrab", "MSErrc", "NPoints1", "NPoints2",
