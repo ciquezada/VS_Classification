@@ -211,6 +211,7 @@ def write_join_features_python(params, subdir_list):
     new_python_script = f"{output_dir}{os.sep}join_features.py"
     subdir_list = ",\n".join(['\"'+dir+'\"' for dir in subdir_list])
     python_str = f"""import glob
+import shutil
 import os
 import pandas as pd
 import numpy as np
@@ -264,7 +265,7 @@ for filePath2 in fileList2:
 
 for dir in subdir_list:
     try:
-        os.rmdir(dir)
+        shutil.rmtree(dir, ignore_errors=True)
     except:
         print("Error while deleting file : ", dir)
 
