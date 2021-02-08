@@ -327,7 +327,7 @@ cd \"{output_dir}\"
     if int(params[1]["1.- Extraer features"]) or int(params[1]["2.- Extraer postfeatures"]):
         write_join_features_python(params, subdir_list)
         RUN_script += "python join_features.py\n"
-    RUN_script += f"rm 'FINAL_SCRIPT.sh'"
+    RUN_script += f"rm 'FINAL_SCRIPT.sh'\n"
     RUN_script += f"echo 'done!'"
     with open(f"{output_dir}{os.sep}FINAL_SCRIPT.sh", "w", encoding="utf-8") as fout:
         fout.write(RUN_script)
