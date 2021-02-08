@@ -243,7 +243,7 @@ postfeatures_df = pd.concat([pd.read_csv(f\"{dir}{os.sep}postfeatures.csv\", sep
 """
         python_str += f"""
 postfeatures_df.to_csv(\"{output_dir}{os.sep}postfeatures.csv\", sep=\" \", index=False)
-del(features_df)
+del(postfeatures_df)
 """
     python_str += f"""
 
