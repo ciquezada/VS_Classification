@@ -32,7 +32,6 @@ setup(
         "feets",
         "scikit-learn",
         "sympy",
-        "george",
         "pybind11",
         "emcee",
         "statsmodels",
