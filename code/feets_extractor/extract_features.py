@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import shutil
 from multiprocessing import Pool
 
 
@@ -14,12 +15,24 @@ def run_feets_extractor(i_args):
     RUN_CODE_STRING += features_preset + " " # features selection
     os.system(RUN_CODE_STRING)
 
-# In line 37 is the period selection
+# In line 52 is the period selection
 def period_selection(selection, df):
     if selection=="min_aov":
         return df.min(axis=1)
     elif selection=="aov1":
         return df["aov1"]
+
+def os_mkdir(folder_name):
+    # making needed directories
+    gen = (x for x in range(1,99999))
+    aux_folder_name = folder_name[:-1]
+    while True:
+        try:
+            os.mkdir(folder_name)
+            break
+        except OSError as error:
+            folder_name = f"{aux_folder_name}{next(gen)}"
+    return folder_name
 
 if __name__=="__main__":
     # user input
@@ -43,11 +56,7 @@ if __name__=="__main__":
         input_df["label"] = curves_df.label
     del(curves_df)
     # making needed directories
-    gen = (x for x in range(1,99999))
-    temp_folder = "temp_0"
-    while os.path.exists(temp_folder):
-        temp_folder = f"temp_{next(gen)}"
-    os.system(f'mkdir {temp_folder}')
+    temp_folder = os_mkdir("temp_0")
     # splitting input file
     chunksize = int(np.ceil(input_df.shape[0]/num_proc))
     for i in range(num_proc):
@@ -68,4 +77,4 @@ if __name__=="__main__":
     output_df.to_csv(output_file, sep=" ", index=False)
     # cleaning mess
     if os.path.exists(temp_folder):
-        os.system(f'rm -r {temp_folder}')
+        shutil.rmtree(temp_folder, ignore_errors=True)

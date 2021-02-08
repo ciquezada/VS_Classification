@@ -6,12 +6,14 @@ from ext_magnitude_distribution import MagnitudeDistribution
 from ext_scipy_anderson_darling import SciPyAndersonDarling
 from ext_stats_model_tsa import StatsmodelTSA
 from ext_fit_braga_template import FitBragaTemplate
+from ext_post_features import PostFeatures
 import feets
 import numpy as np
 import pandas as pd
 import sys
 import os
 import parameters_feets_extractor as P
+from drop_sigma import drop_err_sigma_gp
 
 
 '''
@@ -40,8 +42,11 @@ feets.register_extractor(FitGP)
 feets.register_extractor(FitTemplate)
 feets.register_extractor(FitFourier)
 feets.register_extractor(FitBragaTemplate)
+feets.register_extractor(PostFeatures)
 
-def drop_err(star_data):
+
+@drop_err_sigma_gp
+def drop_err(star_data, *args, **kwargs):
     emed = star_data.emag.median()
     esig = star_data.emag.std()
     e95 = min(np.percentile(star_data.emag.values, [95])[0], emed+2.5*esig)
@@ -57,6 +62,8 @@ def get_feets_extra_params(selected_features, curve_period):
         params["FitBragaTemplate"] = {"period": curve_period}
     if not set(selected_features).isdisjoint(P.fcomponents_dependent_features):
         params["FitFourier"] = {"period": curve_period, "gamma": P.FitFourier_gamma}
+    if not set(selected_features).isdisjoint(P.post_dependent_features):
+        params["PostFeatures"] = {"period": curve_period, "gamma": P.PostFeatures_gamma}
     return params
 
 def extract_curve_features(curve_data, selected_features):
@@ -65,7 +72,7 @@ def extract_curve_features(curve_data, selected_features):
     ks_star_data = pd.read_csv(curve_ks_path,
                                 names=["mjd", "mag", "emag"],
                                         delim_whitespace=True)
-    ks_star_data = drop_err(ks_star_data)
+    ks_star_data = drop_err(ks_star_data, curve_period)
     params = get_feets_extra_params(selected_features, curve_period)
     fs = feets.FeatureSpace(data=["time", "magnitude", "error"],
                         only=selected_features,

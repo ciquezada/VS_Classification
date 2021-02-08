@@ -389,6 +389,7 @@ model_parameters["rrlyr"] = {'bootstrap': True,
                                  'random_state': None,
                                  'verbose': 0,
                                  'warm_start': False}
+
 # default model parameters preset
 model_parameters["default"] = {'bootstrap': True,
                                  'ccp_alpha': 0.0,
@@ -552,3 +553,10 @@ random_grid["hogs+rrlyr"] = {'max_features': max_features,
 selected_features["rrlyr+braga"] = selected_features["rrlyr"]+["MseBragaTemplateRRab", "R2BragaTemplateRRab", "MseBragaTemplateRRc", "R2BragaTemplateRRc"]
 model_parameters["rrlyr+braga"] = model_parameters["rrlyr"]
 random_grid["rrlyr+braga"] = random_grid["rrlyr"]
+
+# RRlyr Lite Version
+
+model_parameters["rrlyr_lite"] = model_parameters["rrlyr"].copy()
+model_parameters["rrlyr_lite"]["n_estimators"] = 200
+selected_features["rrlyr_lite"] = selected_features["rrlyr"]
+random_grid["rrlyr_lite"] = random_grid["rrlyr"]

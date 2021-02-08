@@ -1,6 +1,9 @@
 import feets
 import pandas as pd
 import numpy as np
+import math
+from ext_fit_braga_template_rrab import FitBragaTemplateRRab
+from ext_fit_braga_template_rrc import FitBragaTemplateRRc
 from george import kernels
 import george
 import emcee
@@ -9,28 +12,27 @@ from scipy import optimize
 from functools import reduce
 from loess_smoother import smooth_curve_data_with_loess
 from sklearn.metrics import mean_squared_error
+from drop_sigma import drop_sigma_loess, drop_sigma_gp
 
 
-class FitGP(feets.Extractor):
+class PostFeatures(feets.Extractor):
     """
-    **AC_std**
-    ACF is an (complete) auto-correlation function
-    which gives us values of auto-correlation of
-    any series with its lagged values. We plot
-    these values along with the confidence band and
-    tada! We have an ACF plot. In simple terms,
-    it describes how well the present value of the
-    series is related with its past values. A time
-    series can have components like trend, seasonality,
-    cyclic and residual. ACF considers all these
-    components while finding correlations hence
-    it’s a ‘complete auto-correlation plot’.
     """
 
     data = ["time", "magnitude", "error"]
-    features = ["GP_RiseRatio", "GP_DownRatio",
-                    "GP_RiseDownRatio", "GP_Skew", "GP_mse"]
+    features = ["post_mseRRab", "post_mseRRc",
+                "post_GP_mse", "post_sigma", "post_rho",
+                "post_GP_RiseRatio", "post_GP_DownRatio",
+                "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio",
+                "post_N_peaks", "post_alias_score", "post_N_points"]
     params = {"period": 1, "gamma": 0.1}
+
+    def _iqr(self, magnitude):
+        N = len(magnitude)
+        sorted_mag = np.sort(magnitude)
+        max5p = np.median(sorted_mag[-int(math.ceil(0.05 * N)) :])
+        min5p = np.median(sorted_mag[0 : int(math.ceil(0.05 * N))])
+        return max5p - min5p
 
     def _gp_skew(self, magnitude, fit):
         xdata = np.linspace(0, 1)
@@ -90,7 +92,10 @@ class FitGP(feets.Extractor):
         max_x_candidate = phase_df.x.iloc[peaks[-1]]
 
         max_x = optimize.fmin(lambda x: fit.predict(magnitude, x)[0], max_x_candidate, disp = 0)[0]
-        return 1 - (max_x - x0)
+        return 1 - (max_x - x0), len(peaks)
+
+    def _sigma(self, mag):
+        return np.std(mag)
 
     def _gp_mse(self, time, magnitude, period, fit):
         phaser = lambda mjd, P: (mjd/P)%1.
@@ -99,7 +104,6 @@ class FitGP(feets.Extractor):
         mse = mean_squared_error(magnitude, gp_mag,
                                       sample_weight=None, squared=False)
         return mse
-
 
     def _gaussian_process(self, time, magnitude, error, period, gamma):
         phaser = lambda mjd, P: (mjd/P)%1.
@@ -113,16 +117,47 @@ class FitGP(feets.Extractor):
         gp.compute(phase, error)
         return gp, best_gamma
 
-    # @smooth_curve_data_with_loess
+    def _alias_score(self, time, period):
+        phaser = lambda mjd, P: (mjd/P)%1.
+        phase = phaser(time, period)
+        bins = np.histogram(phase, bins=20, range=(0, 1))[0]
+        return len(bins[bins==0])
+
+    # @drop_sigma_loess
+    # @drop_sigma_gp
     def fit(self, time, magnitude, error, period, gamma):
-        # retrieve the amplitude limits
         fit, best_gamma = self._gaussian_process(time, magnitude, error, period, gamma)
-        gp_down_ratio = self._gp_down_ratio(magnitude, fit)
+        gp_down_ratio, n_peaks = self._gp_down_ratio(magnitude, fit)
         gp_rise_ratio = self._gp_rise_ratio(magnitude, fit)
         gp_rise_down = gp_rise_ratio / gp_down_ratio
         gp_skew = self._gp_skew(magnitude, fit)
         gp_mse = self._gp_mse(time, magnitude, period, fit)
+        alias_score = self._alias_score(time, period)
 
-        return {"GP_RiseRatio": gp_rise_ratio, "GP_DownRatio": gp_down_ratio,
-                    "GP_RiseDownRatio": gp_rise_down, "GP_Skew": gp_skew,
-                    "GP_mse": gp_mse}
+        sigma = self._sigma(magnitude)
+        rho = sigma/gp_mse
+        amplitud = self._iqr(magnitude)
+        n_points = len(time)
+        sn_ratio = amplitud*np.sqrt(len(time))/gp_mse
+        post_features = {"post_GP_mse":gp_mse,
+                            "post_sigma":sigma,
+                            "post_rho":rho,
+                            "post_GP_RiseRatio": gp_rise_ratio,
+                            "post_GP_DownRatio": gp_down_ratio,
+                            "post_GP_RiseDownRatio": gp_rise_down,
+                            "post_GP_Skew": gp_skew,
+                            "post_SN_ratio": sn_ratio,
+                            "post_N_peaks": n_peaks,
+                            "post_alias_score": alias_score,
+                            "post_N_points": n_points
+                            }
+
+        fit_ab = FitBragaTemplateRRab()
+        fit_c = FitBragaTemplateRRc()
+        params = fit_ab.fit(time, magnitude, error, period)
+        params_c = fit_c.fit(time, magnitude, error, period, params["t_sync"])
+        params.update(params_c)
+
+        post_features["post_mseRRab"] = params["MseBragaTemplateRRab"]
+        post_features["post_mseRRc"] = params["MseBragaTemplateRRc"]
+        return post_features

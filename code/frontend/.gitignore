@@ -1,0 +1,10 @@
+__pycache__
+prev_classify_params.txt
+prev_extract_features_params.txt
+prev_custom_output_params.txt
+prev_var2df_params.txt
+last_classify_geryon2_script.sh
+last_classify_script.sh
+last_extract_features_script.sh
+old_VS_classify.py
+old_VS_classify_geryon2.py

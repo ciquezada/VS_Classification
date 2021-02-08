@@ -6,6 +6,7 @@ import os
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn import metrics
 from classifier import SingleProbRF
 import pprint
 import sys
@@ -85,6 +86,12 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False,
     y_pred_list = []
     ######################################
 
+    ## ROC ###############################
+    if len(labels)==2:
+        roc_auc_list = []
+        display_list = []
+    ######################################
+
     for train_index, test_index in kf.split(X, Y):
         x_train, x_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = Y.iloc[train_index], Y.iloc[test_index]
@@ -112,6 +119,17 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False,
         ## Y_PRED_PROBA OUTPUT #################################
         # y_pred_list[-1]["prob"] = model.predict_proba(x_test).set_index([y_test.index]).max(axis=1)
         #################################################
+        ## ROC ###############################
+        if len(labels)==2 and "RRab" in labels:
+            fpr, tpr, thresholds = metrics.roc_curve(y_test.values, model.predict_proba(x_test).RRab.values,
+                                                                                     pos_label="RRab")
+            roc_auc = metrics.auc(fpr, tpr)
+            display = metrics.RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc,
+                                              estimator_name='RF')
+            roc_auc_list.append(roc_auc)
+            display_list.append(display)
+        ######################################
+
 
 
     ## plot_confusion #############################
@@ -177,6 +195,18 @@ def singleprob_eval_final(model, X, Y, cm_train=False, add_low_prob=False,
     y_pred_output = pd.concat(y_pred_list)
     y_pred_output = y_pred_output.groupby(y_pred_output.index).mean()
     #######################################
+
+    ## ROC ###############################
+    fig, ax = plt.subplots(figsize=(10,10))
+    if len(labels)==2 and "RRab" in labels:
+        roc_auc_mean = sum(roc_auc_list)/10
+        for display in display_list:
+            display.plot(ax = ax)
+        plt.savefig(output_dir + os.sep + "roc_curve.pdf")
+#         plt.show()
+        plt.close()
+    ######################################
+
     return cl, y_pred_output
 
 if __name__=="__main__":

@@ -3,3 +3,5 @@ data/
 analysis/
 features/
 run_scripts/
+VS_lite.py
+VS_advance.py
