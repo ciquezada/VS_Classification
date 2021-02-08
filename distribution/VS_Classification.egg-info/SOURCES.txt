@@ -1,4 +1,3 @@
-README.md
 setup.py
 VS_Classification.egg-info/PKG-INFO
 VS_Classification.egg-info/SOURCES.txt
