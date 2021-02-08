@@ -4,7 +4,7 @@ import os
 TRAINING_FEATURES_PATH = "../../data/vvv_shortp_train+onlyrr+gp_drop/features.csv" # PARA VS_lite
 
 VS_DIR = os.path.abspath(f"{os.path.dirname(__file__)}")
-TRAINING_FEATURES_PATH = os.path.abspath(TRAINING_FEATURES_PATH)
+TRAINING_FEATURES_PATH = os.path.abspath(f"{VS_DIR}{os.sep}{TRAINING_FEATURES_PATH}")
 
 def export_to_script(script, name):
     with open(f"{VS_DIR}{os.sep}..{os.sep}..{os.sep}{name}", "w", encoding="utf-8") as fout:
