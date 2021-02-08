@@ -1,0 +1,7 @@
+README.md
+setup.py
+VS_Classification.egg-info/PKG-INFO
+VS_Classification.egg-info/SOURCES.txt
+VS_Classification.egg-info/dependency_links.txt
+VS_Classification.egg-info/requires.txt
+VS_Classification.egg-info/top_level.txt

@@ -1,0 +1,12 @@
+feets
+scikit-learn
+sympy
+george
+pybind11
+emcee
+statsmodels
+astropy
+symfit
+pandas
+scipy
+numpy
