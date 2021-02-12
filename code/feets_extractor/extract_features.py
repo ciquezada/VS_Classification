@@ -6,6 +6,8 @@ import shutil
 from multiprocessing import Pool
 
 
+TEMP_DIR = os.path.abspath("/data4/ciquezada/VS_Classification/code/feets_extractor")
+
 def run_feets_extractor(i_args):
     i, args = i_args
     features_preset, temp_folder = args
@@ -40,10 +42,9 @@ if __name__=="__main__":
     ks_curves_dir = sys.argv[2]
     curves_file = sys.argv[3]
     output_file = sys.argv[4]
-    if len(sys.argv)>5:
-        features_preset = sys.argv[5]
-    else:
-        features_preset = "test"
+    features_preset = sys.argv[5]
+    # CONFIG
+    temp_dir = TEMP_DIR
     # load curve file and then prepare input file
     curves_df = pd.read_csv(curves_file, sep=" ")
     input_df = curves_df[["vvv"]].copy()
@@ -56,7 +57,8 @@ if __name__=="__main__":
         input_df["label"] = curves_df.label
     del(curves_df)
     # making needed directories
-    temp_folder = os_mkdir("temp_0")
+    temp_folder = f"{temp_dir}{os.sep}temp_0"
+    temp_folder = os_mkdir(temp_folder)
     # splitting input file
     chunksize = int(np.ceil(input_df.shape[0]/num_proc))
     for i in range(num_proc):
