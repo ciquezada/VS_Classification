@@ -50,7 +50,7 @@ def params_to_script(params, i):
 #PBS -N {execution_title}
 #PBS -k eo
 #PBS -l nodes=1:ppn=1
-#PBS -l walltime=72:00:00
+#PBS -l walltime=120:00:00
 
 TITLE=\"{execution_title}\"
 
