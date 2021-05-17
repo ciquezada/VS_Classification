@@ -5,6 +5,8 @@ import numpy as np
 from multiprocessing import Pool
 
 
+TEMP_DIR = os.path.abspath("/data4/ciquezada/VS_Classification/code/ks_metallicities")
+
 """
 Adapter for Ks_metalicity to work with VS_Classification curves files format
 [vvv, aov1, aov2, ...] and parallel procceses
@@ -41,22 +43,34 @@ def run_only_pyfiner(i_args):
     RUN_CODE_STRING += "-p-no_pymerlin " # temp pymerlin file
     os.system(RUN_CODE_STRING)
 
+def os_mkdir(folder_name folder_name_pdf):
+    # making needed directories
+    gen = (x for x in range(1,99999))
+    aux_folder_name = folder_name[:-1]
+    aux_folder_name_pdf = folder_name_pdf[:-1]
+    while True:
+        try:
+            os.mkdir(folder_name)
+            os.mkdir(folder_name_pdf)
+            break
+        except OSError as error:
+            i = next(gen)
+            folder_name = f"{aux_folder_name}{i}"
+            folder_name_pdf = f"{aux_folder_name_pdf}{i}"
+    return folder_name, folder_name_pdf
+
 if __name__=="__main__":
     # user input
     num_proc = int(sys.argv[1])
     curves_dir = sys.argv[2]
     curves_file = sys.argv[3]
     output_file = sys.argv[4]
+    # CONFIG
+    temp_dir = TEMP_DIR
     # making needed directories
-    gen = (x for x in range(1,99999))
-    temp_folder = "temp_0"
-    output_pdf_folder = "output_pdf_0"
-    while os.path.exists(temp_folder) or os.path.exists(output_pdf_folder):
-        n = next(gen)
-        temp_folder = f"temp_{n}"
-        output_pdf_folder = f"output_pdf_{n}"
-    os.system(f'mkdir {temp_folder}')
-    os.system(f'mkdir {output_pdf_folder}')
+    temp_folder = f"{temp_dir}{os.sep}temp_0"
+    output_pdf_folder = f"{temp_dir}{os.sep}output_pdf_0"
+    temp_folder, output_pdf_folder = os_mkdir(temp_folder, output_pdf_folder)
     # load curve file and then prepare input file
     curves_df = pd.read_csv(curves_file, sep=" ")
     input_df = curves_df[["vvv", "aov1"]].copy()
@@ -91,7 +105,8 @@ if __name__=="__main__":
                                 for i in range(num_proc)], ignore_index=True)
     output_df.to_csv(output_file, sep=" ", index=False)
     # cleaning mess
+    # cleaning mess
     if os.path.exists(temp_folder):
-        os.system(f'rm -r {temp_folder}')
-    if os.path.exists(output_pdf_folder):
-        os.system(f'rm -r {output_pdf_folder}')
+        shutil.rmtree(temp_folder, ignore_errors=True)
+    # if os.path.exists(output_pdf_folder):
+    #     shutil.rmtree(output_pdf_folder, ignore_errors=True)
