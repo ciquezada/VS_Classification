@@ -30,6 +30,8 @@ def get_executable_options():
             f"python \"{cwd}{os.sep}VS_classify_geryon2.py\"",
             f"python \"{cwd}{os.sep}VS_extract_features.py\"",
             f"python \"{cwd}{os.sep}VS_extract_features_geryon2.py\"",
+            f"python \"{cwd}{os.sep}VS_ks_metallicites.py\"",
+            f"python \"{cwd}{os.sep}VS_ks_metallicites_geryon2.py\"",
             f"python \"{cwd}{os.sep}var_to_dataframe.py\"",
             f"python \"{cwd}{os.sep}build_custom_output.py\"",
             ]
@@ -37,8 +39,10 @@ def get_executable_options():
                 "2.- VS Classify (Geryon2 mode)",
                 "3.- VS extractor de features",
                 "4.- VS extractor de features (Geryon2 mode)",
-                "5.- Convertir '.var' a '.csv' DataFrame (Curve File)",
-                "6.- Construir custom output"
+                "5.- VS extractor de metalicidades",
+                "6.- VS extractor de metalicidades (Geryon2 mode)",
+                "7.- Convertir '.var' a '.csv' DataFrame (Curve File)",
+                "8.- Construir custom output"
                 ]
     return op, names
 
@@ -49,7 +53,7 @@ if __name__=="__main__":
         clear_screen()
         print("\n".join(names))
         print()
-        while election not in ['1', '2', '3', '4', '5', '6',  '', 'q']:
+        while election not in ['1', '2', '3', '4', '5', '6', '7', '8', '', 'q']:
             election = input("(q or ENTER) to quit: \n")
         if election == 'q' or election == '':
             print_exit()
