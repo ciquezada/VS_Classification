@@ -30,8 +30,8 @@ def get_executable_options():
             f"python \"{cwd}{os.sep}VS_classify_geryon2.py\"",
             f"python \"{cwd}{os.sep}VS_extract_features.py\"",
             f"python \"{cwd}{os.sep}VS_extract_features_geryon2.py\"",
-            f"python \"{cwd}{os.sep}VS_ks_metallicites.py\"",
-            f"python \"{cwd}{os.sep}VS_ks_metallicites_geryon2.py\"",
+            f"python \"{cwd}{os.sep}VS_ks_metallicities.py\"",
+            f"python \"{cwd}{os.sep}VS_ks_metallicities_geryon2.py\"",
             f"python \"{cwd}{os.sep}var_to_dataframe.py\"",
             f"python \"{cwd}{os.sep}build_custom_output.py\"",
             ]
