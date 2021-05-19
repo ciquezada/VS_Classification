@@ -61,7 +61,7 @@ try:
     else:
         no_J = False
         jd_min.append(np.min(LC_J[0]))
-        
+
 except:
     print("{:s}: J light curve file not found!".format(NAME))
     exit()
@@ -192,7 +192,7 @@ else:
     LC_J_phases        = return_LC_phases(huber.x[2], LC_J[0], 0.0)
     J_predicted_shape  = return_harmonic_LC(harmonic_order, 1.0,        (U*harmonic_coef_j.T).T.sum(axis=0),
                                             0.0, centers_long-huber.x[1]/huber.x[2])
-    
+
     J_predicted_at_obs = return_harmonic_LC(harmonic_order, huber.x[2], (U*harmonic_coef_j.T).T.sum(axis=0),
                                             0.0, LC_J[0]-huber.x[1])
     J_mag_mean   = np.mean(LC_J[1]-J_predicted_at_obs)
@@ -215,7 +215,7 @@ if no_H == True:
 else:
     LC_H[0] = LC_H[0] - shift
     LC_H_phases        = return_LC_phases(huber.x[2], LC_H[0], 0.0)
-    
+
     H_predicted_at_obs = return_harmonic_LC(harmonic_order, huber.x[2], (U*harmonic_coef_k.T).T.sum(axis=0),
                                             0.0, LC_H[0]-huber.x[1])
     H_mag_mean   = np.mean(  LC_H[1]-H_predicted_at_obs)
@@ -246,7 +246,7 @@ ax1[0].text(.02, 1.04,textstr,fontsize=11,
             transform=ax1[0].transAxes)
 
 
-# The figure is saved to a pdf with the name given as the 
+# The figure is saved to a pdf with the name given as the
 
 plt.savefig(saveto, bbox_inches='tight', format='pdf')
 
@@ -260,4 +260,3 @@ textstr+= '{:8.6f} {:4d} {:4d}'.format(cost/LC_K3.shape[1], LC_K3.shape[1], LC_K
 
 
 print(textstr)
-
