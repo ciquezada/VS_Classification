@@ -43,7 +43,7 @@ def run_only_pyfiner(i_args):
     RUN_CODE_STRING += "-p-no_pymerlin " # temp pymerlin file
     os.system(RUN_CODE_STRING)
 
-def os_mkdir(folder_name folder_name_pdf):
+def os_mkdir(folder_name, folder_name_pdf):
     # making needed directories
     gen = (x for x in range(1,99999))
     aux_folder_name = folder_name[:-1]
