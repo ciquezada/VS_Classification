@@ -1,6 +1,8 @@
 import os
 import io
 import unittest
+import shutil
+
 
 class pyfinerAdapterTestCase(unittest.TestCase):
     def setUp(self):
@@ -28,8 +30,8 @@ class pyfinerAdapterTestCase(unittest.TestCase):
                                                             "incorrect output")
 
     def tearDown(self):
-        os.system('rm -r output_pdf')
-        os.system("rm -r unittest" + os.sep + "test_output.csv")
+        shutil.rmtree("output_pdf", ignore_errors=True)
+        shutil.rmtree("unittest" + os.sep + "test_output.csv", ignore_errors=True)
 
 class pyfinerAdapterParallelTestCase(unittest.TestCase):
     def setUp(self):
@@ -57,8 +59,8 @@ class pyfinerAdapterParallelTestCase(unittest.TestCase):
                                                             "incorrect output")
 
     def tearDown(self):
-        os.system('rm -r output_pdf')
-        os.system("rm -r unittest" + os.sep + "test_output.csv")
+        shutil.rmtree("output_pdf", ignore_errors=True)
+        shutil.rmtree("unittest" + os.sep + "test_output.csv", ignore_errors=True)
 
 if __name__=="__main__":
     unittest.main()

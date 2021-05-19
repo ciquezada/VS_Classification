@@ -3,9 +3,11 @@ import sys
 import pandas as pd
 import numpy as np
 from multiprocessing import Pool
+import shutil
 
 
 TEMP_DIR = os.path.abspath("/data4/ciquezada/VS_Classification/code/ks_metallicities")
+# TEMP_DIR = "..\\ks_metallicities"
 
 """
 Adapter for Ks_metalicity to work with VS_Classification curves files format
@@ -86,7 +88,7 @@ if __name__=="__main__":
     for i in range(num_proc):
         input_df.iloc[chunksize*i:chunksize*(i+1),:].to_csv(
                                         f"{temp_folder}{os.sep}input_{i}.csv",
-                                                        index=False, sep=" ")
+                                                        index=False, header=False)
     # calling pyfiner pipeline
     pool = Pool(num_proc)
     if not "-p-no_pymerlin" in sys.argv:
@@ -101,7 +103,7 @@ if __name__=="__main__":
     pool.join()
     # joining output parts and saving
     output_df = pd.concat([pd.read_csv(
-                            f"{temp_folder}{os.sep}output_{i}.csv", sep=" ")
+                            f"{temp_folder}{os.sep}output_{i}.csv")
                                 for i in range(num_proc)], ignore_index=True)
     output_df.to_csv(output_file, sep=" ", index=False)
     # cleaning mess
