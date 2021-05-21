@@ -75,7 +75,7 @@ PROGRAM=\"adapter_Ks_metallicity.py\"
     if params[1]["1.- Extraer metalicidades"]:
         py_merlin = "si" if params[1]["2.- Ejecutar pymerlin"] else "-p-no_pymerlin"
         data_j_msg = "\nCurves Dir J-Band: $DATA_DIR_J" if data_dir_j!="0" else ""
-        data_j_param = f"-jdir \\\"${data_dir_j}\\\"" if data_dir_j!="0" else ""
+        data_j_param = "-jdir \"$DATA_DIR_J\"" if data_dir_j!="0" else ""
 
         RUN_extract_features_1 = f"""
 METALLICITIES_OUTPUT=\"$OUTPUT_DIR{os.sep}metallicities.csv\"
