@@ -67,8 +67,8 @@ if __name__=="__main__":
     curves_dir_ks = sys.argv[2]
     curves_file = sys.argv[3]
     output_file = sys.argv[4]
-    curves_dir_j = sys.argv[sys.argv.find("-jdir")+1] if "-jdir" in sys.argv else False
-    curves_dir_h = sys.argv[sys.argv.find("-hdir")+1] if "-hdir" in sys.argv else False
+    curves_dir_j = sys.argv[sys.argv.index("-jdir")+1] if "-jdir" in sys.argv else False
+    curves_dir_h = sys.argv[sys.argv.index("-hdir")+1] if "-hdir" in sys.argv else False
     # CONFIG
     temp_dir = TEMP_DIR
     # making needed directories
