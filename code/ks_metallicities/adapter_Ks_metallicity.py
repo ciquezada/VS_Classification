@@ -64,9 +64,11 @@ def os_mkdir(folder_name, folder_name_pdf):
 if __name__=="__main__":
     # user input
     num_proc = int(sys.argv[1])
-    curves_dir = sys.argv[2]
+    curves_dir_ks = sys.argv[2]
     curves_file = sys.argv[3]
     output_file = sys.argv[4]
+    curves_dir_j = sys.argv[sys.argv.find("-jdir")+1] if "-jdir" in sys.argv else False
+    curves_dir_h = sys.argv[sys.argv.find("-hdir")+1] if "-hdir" in sys.argv else False
     # CONFIG
     temp_dir = TEMP_DIR
     # making needed directories
@@ -77,11 +79,17 @@ if __name__=="__main__":
     curves_df = pd.read_csv(curves_file, sep=" ")
     input_df = curves_df[["vvv", "aov1"]].copy()
     input_df["ks"] = curves_df.vvv.apply(lambda x:
-                                                f"{curves_dir}{os.sep}{x}.dat")
+                                            f"{curves_dir_ks}{os.sep}{x}.dat")
     input_df["j"] = f"j{os.sep}j_empty.dat"
     input_df["h"] = f"h{os.sep}h_empty.dat"
+    if curves_dir_j:
+        input_df["j"] = curves_df.vvv.apply(lambda x:
+                                            f"{curves_dir_j}{os.sep}{x}.dat")
+    if curves_dir_h:
+        input_df["h"] = curves_df.vvv.apply(lambda x:
+                                            f"{curves_dir_h}{os.sep}{x}.dat")
     input_df["output_pdf"] = curves_df.vvv.apply(lambda x:
-                                                f"{output_pdf_folder}{os.sep}{x}.pdf")
+                                            f"{output_pdf_folder}{os.sep}{x}.pdf")
     del(curves_df)
     # splitting input file
     chunksize = int(np.ceil(input_df.shape[0]/num_proc))
