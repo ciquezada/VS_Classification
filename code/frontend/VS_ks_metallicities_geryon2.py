@@ -39,7 +39,8 @@ def params_to_script(params, i):
     num_proc = params[0]["3.- Numero de procesos"]
     vs_classificator_dir = os.path.abspath(f"{os.path.abspath(os.path.dirname(__file__))}{os.sep}..{os.sep}..")
     curve_file = params[1]["3.- Archivo con curvas (DataFrame)"]
-    data_dir = params[1]["4.- Carpeta con .dat s"]
+    data_dir = params[1]["4.- Carpeta con .dat s K-Band"]
+    data_dir_j = params[1]["5.- Carpeta con .dat s J-Band (0: no incluir)"]
 
     ks_metallicities = f"{vs_classificator_dir}{os.sep}code{os.sep}ks_metallicities"
     send_mail = f"{vs_classificator_dir}{os.sep}code{os.sep}monitoring{os.sep}send_email.py"
@@ -56,6 +57,7 @@ TITLE=\"{execution_title}\"
 
 NUM_PROC=\"{num_proc}\"
 DATA_DIR=\"{data_dir}\"
+DATA_DIR_J=\"{data_dir_j if data_dir_j!="0" else "NO_DATA"}\"
 OUTPUT_DIR=\"{output_dir}{os.sep}$TITLE\"
 
 # .var to DataFrame
@@ -71,9 +73,10 @@ PROGRAM=\"adapter_Ks_metallicity.py\"
     RUN_script += RUN_geryon_header
 
     if params[1]["1.- Extraer metalicidades"]:
-        py_merlin = "-p-no_pymerlin"
-        if params[1]["2.- Ejecutar pymerlin"]:
-            py_merlin = "si"
+        py_merlin = "si" if params[1]["2.- Ejecutar pymerlin"] else "-p-no_pymerlin"
+        data_j_msg = "\nCurves Dir J-Band: $DATA_DIR_J" if data_dir_j!="0" else ""
+        data_j_param = f"-jdir \\\"${data_dir_j}\\\"" if data_dir_j!="0" else ""
+
         RUN_extract_features_1 = f"""
 METALLICITIES_OUTPUT=\"$OUTPUT_DIR{os.sep}metallicities.csv\"
 PY_MERLYN=\"{py_merlin}\"
@@ -82,7 +85,7 @@ PY_MERLYN=\"{py_merlin}\"
 LOG=\"INICIADO
 PROGRAM: $PROGRAM
 Procceses: $NUMPROC
-Curves Dir: $DATA_DIR
+Curves Dir: $DATA_DIR{data_j_msg}
 Curves File: $CURVES_FILE
 OUTPUT: $METALLICITIES_OUTPUT
 py_merlyn: $PY_MERLYN\"
@@ -90,7 +93,7 @@ LOG_END=\"TERMINADO
 PROGRAM: $PROGRAM
 Metalicidades en $METALLICITIES_OUTPUT \"
 {'' if not i else '#'}python \"{send_mail}\" \"$TITLE\" \"$LOG\"
-python $PROGRAM \"$NUM_PROC\" \"$DATA_DIR\" \"$CURVES_FILE\" \"$METALLICITIES_OUTPUT\" \"$PY_MERLYN\"
+python $PROGRAM \"$NUM_PROC\" \"$DATA_DIR\" \"$CURVES_FILE\" \"$METALLICITIES_OUTPUT\" \"$PY_MERLYN\" {data_j_param}
 {'' if not i else '#'}python \"{send_mail}\" \"$TITLE\" \"$LOG_END\"
 
         """
@@ -115,7 +118,8 @@ def get_default_params():
     extract_features_params = {"1.- Extraer metalicidades": 1,
                                 "2.- Ejecutar pymerlin": 0,
                                 "3.- Archivo con curvas (DataFrame)": "/path/to/curve/file",
-                                "4.- Carpeta con .dat s": "/path/to/.dat/folder"}
+                                "4.- Carpeta con .dat s K-Band": "/path/to/.dat/folder",
+                                "5.- Carpeta con .dat s J-Band (0: no incluir)": 0}
 
     params = [initial_params, extract_features_params]
     return params
@@ -323,8 +327,11 @@ def absolute_params(params):
                             params[0]["2.- Donde guardar la carpeta output"])
     params[1]["3.- Archivo con curvas (DataFrame)"] = os.path.abspath(
                                         params[1]["3.- Archivo con curvas (DataFrame)"])
-    params[1]["4.- Carpeta con .dat s"] = os.path.abspath(
-                                params[1]["4.- Carpeta con .dat s"])
+    params[1]["4.- Carpeta con .dat s K-Band"] = os.path.abspath(
+                                params[1]["4.- Carpeta con .dat s K-Band"])
+    if params[1]["5.- Carpeta con .dat s J-Band (0: no incluir)"]!="0":
+        params[1]["5.- Carpeta con .dat s J-Band (0: no incluir)"] = os.path.abspath(
+                                params[1]["5.- Carpeta con .dat s J-Band (0: no incluir)"])
     return params
 
 def vs_ks_metallicites_geryon2_front():
