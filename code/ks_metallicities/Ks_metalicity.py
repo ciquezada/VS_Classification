@@ -36,10 +36,12 @@ def run_pyfiner(data):
 
         output = os.popen('python pyfiner.py %s %f %s %s %s %s' %(var.var_name,
             var.P, var.file_ks, var.file_j, var.file_h, var.output_pdf) ).read()
+
         # Validamos output
-        if len(output.split('\n'))>1:
+        if len(output.split('\n'))>1 and len(output.split('\n')[-2].split())==21:
             to_write.iloc[index] = output.split('\n')[-2].split()
         else:
+            print(f"{var.var_name}: Pyfiner Fail")
             to_write.iloc[index] = [var.var_name, var.P, np.nan, np.nan,
                                         np.nan, np.nan, np.nan, np.nan,
                                          np.nan, np.nan, np.nan, np.nan,
