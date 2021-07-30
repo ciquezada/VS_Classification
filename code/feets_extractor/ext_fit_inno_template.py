@@ -128,5 +128,5 @@ class FitInnoTemplate(feets.Extractor):
                                               sample_weight=None, squared=False)
 
         return {"R2InnoTemplateCeph": R2Template,
-                    "MseInnoTemplateCeph": MseTemplate,
-                        "t_sync": params["t_sync"]} # DELETE t_sync to work as a feets.Extractor
+                    "MseInnoTemplateCeph": MseTemplate}
+                        #"t_sync": params["t_sync"]} # DELETE t_sync to work as a feets.Extractor
