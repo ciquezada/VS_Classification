@@ -52,13 +52,13 @@ def run_pipeline(params):
             features_mode = params[1]["5.- Seleccion de features"]
             features_output = f"{output_folder}{os.sep}features.csv"
             print("Extrayendo features...  ", end='', flush=True)
-            os.system(f"python extract_features.py \"{num_proc}\" \"{data_dir}\" \"{curves_output}\" \"{features_output}\" \"{features_mode}\"")
+            os.system(f"python extract_features.py -p \"{num_proc}\" -lc \"{data_dir}\" -i \"{curves_output}\" -o \"{features_output}\" -fs \"{features_mode}\"")
             print("OK")
         if params[1]["2.- Extraer postfeatures"]:
             postfeatures_mode = params[1]["6.- Seleccion de postfeatures"]
             postfeatures_output = f"{output_folder}{os.sep}postfeatures.csv"
             print("Extrayendo postfeatures...  ", end='', flush=True)
-            os.system(f"python extract_features.py \"{num_proc}\" \"{data_dir}\" \"{curves_output}\" \"{postfeatures_output}\" \"{postfeatures_mode}\"")
+            os.system(f"python extract_features.py -p \"{num_proc}\" -lc \"{data_dir}\" -i \"{curves_output}\" -o \"{postfeatures_output}\" -fs \"{postfeatures_mode}\"")
             print("OK")
 
 def params_to_script(params):
