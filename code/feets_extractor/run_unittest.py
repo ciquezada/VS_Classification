@@ -2,13 +2,18 @@ import os
 import io
 import unittest
 
+
+cwd = os.path.abspath(f"{os.path.dirname(__file__)}")
+
 class FeetsExtractorTestCase(unittest.TestCase):
     def setUp(self):
-        test_string = "python extract_features.py 1 "
-        test_string += "unittest" + os.sep + "test_data "
-        test_string += "unittest" + os.sep + "test_curves.csv "
-        test_string += "unittest" + os.sep + "test_output.csv "
-        test_string += "test "
+        test_string = "python extract_features.py "
+        test_string += f"-p 1 "
+        test_string += f"-i \"{cwd}{os.sep}unittest{os.sep}test_var.var\" "
+        test_string += f"-o \"{cwd}{os.sep}unittest{os.sep}test_output.csv\" "
+        test_string += f"-lc \"{cwd}{os.sep}unittest{os.sep}test_data\" "
+        test_string += f"-fs \"{cwd}{os.sep}unittest{os.sep}features_test.json\" "
+        test_string += f"-c \"{cwd}{os.sep}unittest{os.sep}test_extractor_config.json\" "
         os.system(test_string)
 
     def test_output_file(self):
@@ -27,10 +32,13 @@ class FeetsExtractorTestCase(unittest.TestCase):
 
 class FeetsExtractorParallelTestCase(unittest.TestCase):
     def setUp(self):
-        test_string = "python extract_features.py 2 "
-        test_string += "unittest" + os.sep + "test_data "
-        test_string += "unittest" + os.sep + "test_curves.csv "
-        test_string += "unittest" + os.sep + "test_output.csv "
+        test_string = "python extract_features.py "
+        test_string += f"-p 2 "
+        test_string += f"-i \"{cwd}{os.sep}unittest{os.sep}test_var.var\" "
+        test_string += f"-o \"{cwd}{os.sep}unittest{os.sep}test_output.csv\" "
+        test_string += f"-lc \"{cwd}{os.sep}unittest{os.sep}test_data\" "
+        test_string += f"-fs \"{cwd}{os.sep}unittest{os.sep}features_test.json\" "
+        test_string += f"-c \"{cwd}{os.sep}unittest{os.sep}test_extractor_config.json\" "
         os.system(test_string)
 
     def test_output_file(self):

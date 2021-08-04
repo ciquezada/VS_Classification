@@ -1,8 +1,8 @@
 [
   "A1A2_ratio",
   "AC_std",
-  "AD",
-    "Beyond1Std",
+  "AD",  
+      "Beyond1Std",
   "GP_DownRatio",
   "GP_RiseDownRatio",
   "GP_RiseRatio",
@@ -45,4 +45,6 @@
    "p21",
    "p31",
    "p41",
+   "R2InnoTemplateCeph",
+   "MseInnoTemplateCeph"
 ]

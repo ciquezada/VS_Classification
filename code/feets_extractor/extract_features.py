@@ -17,7 +17,7 @@ ap.add_argument("-o", "--output_features", required=True,
                                help="Output .csv features file")
 ap.add_argument("-lc", "--lc_directory", required=True,
                                help="Light curves .dat files directory")
-ap.add_argument("-p", "--processes", default=1,
+ap.add_argument("-p", "--processes", default=1, type=int,
                                help="Parallel processes")
 ap.add_argument("-fs", "--features_set", required=True,
                                help="Features set file to extract (JSON)")
@@ -29,9 +29,9 @@ def run_feets_extractor(i_args):
     i, args = i_args
     features_preset, temp_folder = args
     RUN_CODE_STRING = "python adapter_feets_extractor.py " # command line
-    RUN_CODE_STRING += f"{temp_folder}{os.sep}input_{i}.csv " # temp input file
-    RUN_CODE_STRING += f"{temp_folder}{os.sep}output_{i}.csv " # temp output file
-    RUN_CODE_STRING += f"{features_preset} " # features selection
+    RUN_CODE_STRING += f"-i \"{temp_folder}{os.sep}input_{i}.csv\" " # temp input file
+    RUN_CODE_STRING += f"-o \"{temp_folder}{os.sep}output_{i}.csv\" " # temp output file
+    RUN_CODE_STRING += f"-fs \"{features_preset}\" " # features selection
     os.system(RUN_CODE_STRING)
 
 # In line 52 is the period selection
