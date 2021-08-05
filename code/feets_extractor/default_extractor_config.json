@@ -1,0 +1,4 @@
+{
+  "TEMP_DIR": "/data4/ciquezada/VS_Classification/code/feets_extractor",
+  "VAR_COLS": {"ID":"ID_1", "P1":"P1_13", "P2":"P2_14", "P3":"P3_15", "label":"label"}
+}

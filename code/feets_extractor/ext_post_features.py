@@ -4,6 +4,7 @@ import numpy as np
 import math
 from ext_fit_braga_template_rrab import FitBragaTemplateRRab
 from ext_fit_braga_template_rrc import FitBragaTemplateRRc
+from ext_fit_inno_template import PostFitInnoTemplate
 from george import kernels
 import george
 import emcee
@@ -20,7 +21,7 @@ class PostFeatures(feets.Extractor):
     """
 
     data = ["time", "magnitude", "error"]
-    features = ["post_mseRRab", "post_mseRRc",
+    features = ["post_mseRRab", "post_mseRRc", "post_mseCeph",
                 "post_GP_mse", "post_sigma", "post_rho",
                 "post_GP_RiseRatio", "post_GP_DownRatio",
                 "post_GP_RiseDownRatio", "post_GP_Skew", "post_SN_ratio",
@@ -154,10 +155,14 @@ class PostFeatures(feets.Extractor):
 
         fit_ab = FitBragaTemplateRRab()
         fit_c = FitBragaTemplateRRc()
+        fit_ceph = PostFitInnoTemplate()
         params = fit_ab.fit(time, magnitude, error, period)
         params_c = fit_c.fit(time, magnitude, error, period, params["t_sync"])
         params.update(params_c)
+        params_ceph = fit_ceph.fit(time, magnitude, error, period, params["t_sync"])
+        params.update(params_ceph)
 
         post_features["post_mseRRab"] = params["MseBragaTemplateRRab"]
         post_features["post_mseRRc"] = params["MseBragaTemplateRRc"]
+        post_features["post_mseCeph"] = params["MseInnoTemplateCeph"]
         return post_features

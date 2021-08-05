@@ -15,7 +15,18 @@ import sys
 import os
 import parameters_feets_extractor as P
 from drop_sigma import drop_err_sigma_gp
+import argparse
+import json
 
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--input_file", required=True,
+                               help="Input file ['ID', 'ks_path', 'label', 'period']")
+ap.add_argument("-o", "--output_features", required=True,
+                               help="Output .csv features file")
+ap.add_argument("-fs", "--features_set", required=True,
+                               help="Features set file to extract (JSON)")
+args = vars(ap.parse_args())
 
 '''
 Adapter of feets routines by Cabral (search reference) to work with
@@ -23,8 +34,8 @@ VS_Classification files and pipelines.
 Extract features from the curves in the input curve file and return a
 features Dataframe file.
     Args:
-        input_file: path to Curves DataFrame file ["vvv", "period", "ks_path"]
-                                ("vvv":curve_id, "ks_path": ks curve file path)
+        input_file: path to Curves DataFrame file ["ID", "period", "ks_path"]
+                                ("ID":curve_id, "ks_path": ks curve file path)
         output_file: path to output features Datafreme
         features_preset: name of the features set selection (see in parameters_feets_extractor.py)
 
@@ -71,7 +82,7 @@ def get_feets_extra_params(selected_features, curve_period):
     return params
 
 def extract_curve_features(curve_data, selected_features):
-    curve_id, curve_period = curve_data.vvv, curve_data.period
+    curve_id, curve_period = curve_data.ID, curve_data.period
     curve_ks_path = curve_data.ks_path
     ks_star_data = pd.read_csv(curve_ks_path,
                                 names=["mjd", "mag", "emag"],
@@ -97,7 +108,7 @@ def extract_features(curves_data, selected_features):
     features = []
     for i, row in curves_data.iterrows():
         if not os.path.exists(row["ks_path"]):
-            print("The curve dont exists: {}".format(row["vvv"]))
+            print("The curve dont exists: {}".format(row["ID"]))
             continue
         features.append(
                         extract_curve_features(row, selected_features)
@@ -114,11 +125,13 @@ def extract_features(curves_data, selected_features):
 
 if __name__=="__main__":
     # user input
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    features_preset = sys.argv[3]
+    input_file = args["input_file"]
+    output_file = args["output_features"]
+    # Features laod
+    features_set_file = args["features_set"]
+    with open(features_set_file, 'r', encoding="utf-8") as infile:
+        features_set = json.load(infile)
     # load curve file and save features
     curves_data = pd.read_csv(input_file, sep=" ")
-    curves_features = extract_features(curves_data,
-                                        P.selected_features[features_preset])
+    curves_features = extract_features(curves_data, features_set)
     curves_features.to_csv(output_file, sep=" ", index=False)
