@@ -110,6 +110,7 @@ class FitInnoTemplate(feets.Extractor):
         fit_result = fit.execute()
         params = fit_result.params
         params["ampl"] = guess_ampl # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
+        params["t_sync"] = guess_t_sync # THIS IS FOR SECUENTIAL MINIMIZER TO WORK RIGHT
         # END FIT ####################
 
         ## INSPECT
