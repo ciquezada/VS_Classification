@@ -38,8 +38,8 @@ def params_to_script(params, i):
     output_dir = params[0]["2.- Donde guardar la carpeta output"]
     num_proc = params[0]["3.- Numero de procesos"]
     vs_classificator_dir = os.path.abspath(f"{os.path.abspath(os.path.dirname(__file__))}{os.sep}..{os.sep}..")
-    curve_file = params[1]["3.- Archivo con curvas (DataFrame)"]
-    data_dir = params[1]["4.- Carpeta con .dat s"]
+    curve_file = params[1]["3.- Archivo con IDs (.var)"]
+    data_dir = params[1]["4.- Carpeta con curvas de luz"]
 
     feets_extractor = f"{vs_classificator_dir}{os.sep}code{os.sep}feets_extractor"
     send_mail = f"{vs_classificator_dir}{os.sep}code{os.sep}monitoring{os.sep}send_email.py"
@@ -88,7 +88,7 @@ LOG_END=\"TERMINADO
 PROGRAM: $PROGRAM
 features en $FEATURES_OUTPUT \"
 {'' if not i else '#'}python \"{send_mail}\" \"$TITLE\" \"$LOG\"
-python $PROGRAM \"$NUM_PROC\" \"$DATA_DIR\" \"$CURVES_FILE\" \"$FEATURES_OUTPUT\" \"$FEATURES_EXTRACTOR_MODE\"
+python $PROGRAM -p \"$NUM_PROC\" -lc \"$DATA_DIR\" -i \"$CURVES_FILE\" -o \"$FEATURES_OUTPUT\" -fs \"$FEATURES_EXTRACTOR_MODE\"
 {'' if not i else '#'}python \"{send_mail}\" \"$TITLE\" \"$LOG_END\"
 
         """
@@ -111,7 +111,7 @@ LOG_END=\"TERMINADO
 PROGRAM: $PROGRAM
 features en $POSTFEATURES_OUTPUT \"
 {'' if not i else '#'}python \"{send_mail}\" \"$TITLE\" \"$LOG\"
-python \"$PROGRAM\" \"$NUM_PROC\" \"$DATA_DIR\" \"$CURVES_FILE\" \"$POSTFEATURES_OUTPUT\" \"$POSTFEATURES_EXTRACTOR_MODE\"
+python $PROGRAM -p \"$NUM_PROC\" -lc \"$DATA_DIR\" -i \"$CURVES_FILE\" -o \"$POSTFEATURES_OUTPUT\" -fs \"$POSTFEATURES_EXTRACTOR_MODE\"
 {'' if not i else '#'}python \"{send_mail}\" \"$TITLE\" \"$LOG_END\"
 
         """
@@ -135,10 +135,10 @@ def get_default_params():
 
     extract_features_params = {"1.- Extraer features": 1,
                                 "2.- Extraer postfeatures": 1,
-                                "3.- Archivo con curvas (DataFrame)": "/path/to/curve/file",
-                                "4.- Carpeta con .dat s": "/path/to/.dat/folder",
-                                "5.- Seleccion de features": "rrlyr",
-                                "6.- Seleccion de postfeatures": "rrlyr_postfeatures"}
+                                "3.- Archivo con IDs (.var)": "/path/to/var/file",
+                                "4.- Carpeta con curvas de luz": "/path/to/lightcurves/folder",
+                                "5.- Seleccion de features": "/path/to/features_set.json",
+                                "6.- Seleccion de postfeatures": "/path/to/postfeatures_set.json"}
 
     params = [initial_params, extract_features_params]
     return params
@@ -287,7 +287,7 @@ def run_on_geryon_extract_features(params):
     execution_title = params[0]["1.- Nombre del sample (Carpeta con outputs)(sin espacios)"]
     output_dir = params[0]["2.- Donde guardar la carpeta output"]
     num_proc = int(params[0]["3.- Numero de procesos"])
-    curve_file = params[1]["3.- Archivo con curvas (DataFrame)"]
+    curve_file = params[1]["3.- Archivo con IDs (.var)"]
 
     new_output_dir = f"{output_dir}{os.sep}{execution_title}"
     try:
@@ -308,7 +308,7 @@ def run_on_geryon_extract_features(params):
         new_params[0]["1.- Nombre del sample (Carpeta con outputs)(sin espacios)"] = new_execution_title
         new_params[0]["2.- Donde guardar la carpeta output"] = new_output_dir
         new_params[0]["3.- Numero de procesos"] = new_num_proc
-        new_params[1]["3.- Archivo con curvas (DataFrame)"] = new_curve_file
+        new_params[1]["3.- Archivo con IDs (.var)"] = new_curve_file
         RUN_script = params_to_script(new_params, i)
         with open(f"{new_run_script}", "w", encoding="utf-8") as fout:
             fout.write(RUN_script)
@@ -353,10 +353,14 @@ def get_params(params_file):
 def absolute_params(params):
     params[0]["2.- Donde guardar la carpeta output"] = os.path.abspath(
                             params[0]["2.- Donde guardar la carpeta output"])
-    params[1]["3.- Archivo con curvas (DataFrame)"] = os.path.abspath(
-                                        params[1]["3.- Archivo con curvas (DataFrame)"])
-    params[1]["4.- Carpeta con .dat s"] = os.path.abspath(
-                                params[1]["4.- Carpeta con .dat s"])
+    params[1]["3.- Archivo con IDs (.var)"] = os.path.abspath(
+                                        params[1]["3.- Archivo con IDs (.var)"])
+    params[1]["4.- Carpeta con curvas de luz"] = os.path.abspath(
+                                params[1]["4.- Carpeta con curvas de luz"])
+    params[1]["5.- Seleccion de features"] = os.path.abspath(
+                                        params[1]["5.- Seleccion de features"])
+    params[1]["6.- Seleccion de postfeatures"] = os.path.abspath(
+                                params[1]["6.- Seleccion de postfeatures"])
     return params
 
 def vs_extract_features_geryon2_front():
