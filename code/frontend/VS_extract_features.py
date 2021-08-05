@@ -39,7 +39,7 @@ def run_pipeline(params):
     output_folder = f"{output_dir}{os.sep}{execution_title}"
     if params[1]["1.- Extraer features"] or params[1]["2.- Extraer postfeatures"]:
         curve_file = params[1]["3.- Archivo con IDs (.var)"]
-        curves_output = f"{output_folder}{os.sep}curves.csv"
+        curves_output = f"{output_folder}{os.sep}curves.var"
         try:
             os.mkdir(output_folder)
         except OSError as error:
@@ -82,7 +82,7 @@ DATA_DIR=\"{data_dir}\"
 OUTPUT_DIR=\"{output_dir}{os.sep}$TITLE\"
 # .var to DataFrame
 CURVES=\"{curve_file}\"
-CURVES_FILE=\"$OUTPUT_DIR{os.sep}curves.csv\"
+CURVES_FILE=\"$OUTPUT_DIR{os.sep}curves.var\"
 
 mkdir \"$OUTPUT_DIR\"
 cp \"$CURVES\" \"$CURVES_FILE\"

@@ -60,7 +60,7 @@ OUTPUT_DIR=\"{output_dir}{os.sep}$TITLE\"
 
 # .var to DataFrame
 CURVES=\"{curve_file}\"
-CURVES_FILE=\"$OUTPUT_DIR{os.sep}curves.csv\"
+CURVES_FILE=\"$OUTPUT_DIR{os.sep}curves.var\"
 
 mkdir \"$OUTPUT_DIR\"
 cp \"$CURVES\" \"$CURVES_FILE\"
@@ -220,11 +220,11 @@ import numpy as np
 subdir_list = [{subdir_list}]
 """
     python_str += """
-curves_df = pd.concat([pd.read_csv(f\"{dir}{os.sep}curves.csv\", sep=\" \")
+curves_df = pd.concat([pd.read_csv(f\"{dir}{os.sep}curves.var\", sep=\" \")
                             for dir in subdir_list], ignore_index=True)
 """
     python_str += f"""
-curves_df.to_csv(\"{output_dir}{os.sep}curves.csv\", sep=\" \", index=False)
+curves_df.to_csv(\"{output_dir}{os.sep}curves.var\", sep=\" \", index=False)
 del(curves_df)
 """
 
@@ -249,7 +249,7 @@ del(postfeatures_df)
     python_str += f"""
 
 fileList1 = glob.glob(\"run_*\")
-fileList2 = glob.glob(\"*_curves.csv\")
+fileList2 = glob.glob(\"*_curves.var\")
 
 for filePath1 in fileList1:
     try:
@@ -301,7 +301,7 @@ def run_on_geryon_extract_features(params):
         new_execution_title = f"{execution_title}_{i}"
         new_run_script = f"{new_output_dir}{os.sep}run_{new_execution_title}.sh"
         new_num_proc = 1
-        new_curve_file = f"{new_output_dir}{os.sep}{new_execution_title}_curves.csv"
+        new_curve_file = f"{new_output_dir}{os.sep}{new_execution_title}_curves.var"
         input_df.iloc[chunksize*i:chunksize*(i+1),:].to_csv(
                                         f"{new_curve_file}", index=False, sep=" ")
         new_params = [params[0].copy(), params[1].copy()]
