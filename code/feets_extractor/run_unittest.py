@@ -1,5 +1,6 @@
 import os
 import io
+import shutil
 import unittest
 
 
@@ -28,7 +29,8 @@ class FeetsExtractorTestCase(unittest.TestCase):
     #             self.assertListEqual(list(test), list(correct), "incorrect output")
 
     def tearDown(self):
-        os.system("rm -r unittest" + os.sep + "test_output.csv")
+        test_file = "unittest" + os.sep + "test_output.csv"
+        os.remove(test_file)
 
 class FeetsExtractorParallelTestCase(unittest.TestCase):
     def setUp(self):
@@ -53,7 +55,8 @@ class FeetsExtractorParallelTestCase(unittest.TestCase):
     #             self.assertListEqual(list(test), list(correct), "incorrect output")
 
     def tearDown(self):
-        os.system("rm -r unittest" + os.sep + "test_output.csv")
+        test_file = "unittest" + os.sep + "test_output.csv"
+        os.remove(test_file)
 
 if __name__=="__main__":
     unittest.main()
