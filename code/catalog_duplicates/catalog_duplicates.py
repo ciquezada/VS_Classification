@@ -33,8 +33,8 @@ def duplicates(i, a1_df, a2_df, config_params):
     frame = FRAMES[config_params["FRAME"]]
     c1, c2 = COORDS_COLS_NAMES[config_params["FRAME"]]
     a1_df = a1_df.copy().reset_index(drop=True).loc[i:i]
-    a1_input = {c1:a1_df[c1], c2:a1_df[c2], "frame":frame, unit=(u.deg, u.deg)}
-    a2_input = {c1:a2_df[c1], c2:a2_df[c2], "frame":frame, unit=(u.deg, u.deg)}
+    a1_input = {c1:a1_df[c1], c2:a1_df[c2], "frame":frame, "unit":(u.deg, u.deg)}
+    a2_input = {c1:a2_df[c1], c2:a2_df[c2], "frame":frame, "unit":(u.deg, u.deg)}
 
     a1_coords = SkyCoord(**a1_input) #sample
     a2_coords = SkyCoord(**a2_input) #full
@@ -43,8 +43,7 @@ def duplicates(i, a1_df, a2_df, config_params):
     a1_a2_best_matches = a1_df.iloc[idx_a1_a2].reset_index(drop=True)
     a1_a2_best_matches["m_sep"] = d2d_a1_a2.arcsec
     a2_a1_crossmatch = a2_df.join(a1_a2_best_matches, rsuffix="_2")
-    a2_a1_crossmatch = a2_a1_crossmatch[['ID', c1, c2, "ID_2", f"{c1}_2", f"{c2}_2", "m_sep"]]
-    a2_a1_crossmatch = a2_a1_crossmatch.query(f"m_sep>0 and m_sep<{max_sep}")
+    a2_a1_crossmatch = a2_a1_crossmatch.query(f"m_sep>0.000001 and m_sep<{max_sep}")
     return a2_a1_crossmatch
 
 if __name__=="__main__":
@@ -56,14 +55,15 @@ if __name__=="__main__":
     config_file = args["duplicates_config"]
     with open(config_file, 'r', encoding="utf-8") as infile:
         config_params = json.load(infile)
+    c1, c2 = COORDS_COLS_NAMES[config_params["FRAME"]]
     # load var file and then prepare input file
     s_data = pd.read_csv(sample_cat, sep=" ").iloc[:,:3]
     output_names = s_data.columns
-    s_data.colums = ["ID", *coords_cols_names]
+    s_data.columns = ["ID", c1, c2]
     fc_data = pd.read_csv(full_cat, sep=" ").iloc[:,:3]
-    fc_data.colums = ["ID", *coords_cols_names]
+    fc_data.columns = ["ID", c1, c2]
     output_data = pd.concat(list(
                     duplicates(i, s_data, fc_data, config_params) for i in range(s_data.shape[0])
                                                                 ), ignore_index=True)
-    output_data.columns = [*output_names, *list(f"{x}_2" for x in output_names)]
+    output_data.columns = [*output_names, *list(f"{x}_2" for x in output_names), "m_sep"]
     output_data.to_csv(output_file, sep=" ", index=False)
