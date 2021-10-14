@@ -29,7 +29,7 @@ ap.add_argument("-c", "--duplicates_config", default=f"{cwd}{os.sep}default_dupl
 args = vars(ap.parse_args())
 
 def duplicates(i, a1_df, a2_df, config_params):
-    max_sep = config_params["MAX_SEP [m_arcsec]"]
+    max_sep = config_params["MAX_SEP [arcsec]"]
     frame = FRAMES[config_params["FRAME"]]
     c1, c2 = COORDS_COLS_NAMES[config_params["FRAME"]]
     a1_df = a1_df.copy().reset_index(drop=True).loc[i:i]

@@ -51,7 +51,7 @@ if __name__=="__main__":
     config_file = args["duplicates_config"]
     with open(config_file, 'r', encoding="utf-8") as infile:
         config_params = json.load(infile)
-    temp_dir = os.path.abspath(config_params["TEMP_DIR"])
+    temp_dir = config_params["TEMP_DIR"]
     # load var file and then prepare input file
     input_df = pd.read_csv(input_file, delim_whitespace=True)
     # making needed directories

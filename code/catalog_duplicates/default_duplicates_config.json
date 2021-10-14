@@ -1,5 +1,5 @@
 {
-  "TEMP_DIR": "../catalog_duplicates",
-  "MAX_SEP [m_arcsec]": 5,
+  "TEMP_DIR": "..\\catalog_duplicates",
+  "MAX_SEP [arcsec]": 0.5,
   "FRAME": "galactic"
 }
