@@ -1,5 +1,7 @@
 {
   "TEMP_DIR": "..\\catalog_duplicates",
   "MAX_SEP [arcsec]": 0.5,
-  "FRAME": "galactic"
+  "FRAME": "galactic",
+  "DROP_DUPLICATES": true,
+  "COL_ID": "ID"
 }

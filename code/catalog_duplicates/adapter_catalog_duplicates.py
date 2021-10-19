@@ -52,6 +52,7 @@ if __name__=="__main__":
     with open(config_file, 'r', encoding="utf-8") as infile:
         config_params = json.load(infile)
     temp_dir = config_params["TEMP_DIR"]
+    col_id = config_params["COL_ID"]
     # load var file and then prepare input file
     input_df = pd.read_csv(input_file, delim_whitespace=True)
     # making needed directories
@@ -72,8 +73,15 @@ if __name__=="__main__":
     pool.join()
     # joining output parts and saving
     output_df = pd.concat([pd.read_csv(
-                            f"{temp_folder}{os.sep}output_{i}.csv", sep=" ")
+                            f"{temp_folder}{os.sep}output_{i}.csv", delim_whitespace=True)
                                 for i in range(num_proc)], ignore_index=True)
+    # deleting duplicated rows
+    if config_params["DROP_DUPLICATES"]:
+        dups = output_df.apply(lambda x: "x".join(
+                                    np.sort([x[col_id], x[f"{col_id}_2"]])),
+                                                                        axis=1)
+        output_df = output_df[~dups.duplicated()]
+    # saving
     output_df.to_csv(output_file, sep=" ", index=False)
     # cleaning mess
     if os.path.exists(temp_folder):

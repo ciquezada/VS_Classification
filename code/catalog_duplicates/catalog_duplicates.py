@@ -56,12 +56,13 @@ if __name__=="__main__":
     with open(config_file, 'r', encoding="utf-8") as infile:
         config_params = json.load(infile)
     c1, c2 = COORDS_COLS_NAMES[config_params["FRAME"]]
+    col_id = config_params["COL_ID"]
     # load var file and then prepare input file
     s_data = pd.read_csv(sample_cat, sep=" ").iloc[:,:3]
     output_names = s_data.columns
-    s_data.columns = ["ID", c1, c2]
+    s_data.columns = [col_id, c1, c2]
     fc_data = pd.read_csv(full_cat, sep=" ").iloc[:,:3]
-    fc_data.columns = ["ID", c1, c2]
+    fc_data.columns = [col_id, c1, c2]
     output_data = pd.concat(list(
                     duplicates(i, s_data, fc_data, config_params) for i in range(s_data.shape[0])
                                                                 ), ignore_index=True)
