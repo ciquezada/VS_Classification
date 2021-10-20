@@ -32,6 +32,7 @@ def get_executable_options():
             f"python \"{cwd}{os.sep}VS_extract_features_geryon2.py\"",
             f"python \"{cwd}{os.sep}VS_ks_metallicities.py\"",
             f"python \"{cwd}{os.sep}VS_ks_metallicities_geryon2.py\"",
+            f"python \"{cwd}{os.sep}VS_adapter_catalog_duplicates.py\"",
             f"python \"{cwd}{os.sep}var_to_dataframe.py\"",
             f"python \"{cwd}{os.sep}build_custom_output.py\"",
             ]
@@ -41,8 +42,9 @@ def get_executable_options():
                 "4.- VS extractor de features (Geryon2 mode)",
                 "5.- VS extractor de metalicidades",
                 "6.- VS extractor de metalicidades (Geryon2 mode)",
-                "7.- Convertir '.var' a '.csv' DataFrame (Curve File)",
-                "8.- Construir custom output"
+                "7.- VS duplicados en un catalogo",
+                "8.- Convertir '.var' a '.csv' DataFrame (Curve File)",
+                "9.- Construir custom output",
                 ]
     return op, names
 
@@ -53,7 +55,7 @@ if __name__=="__main__":
         clear_screen()
         print("\n".join(names))
         print()
-        while election not in ['1', '2', '3', '4', '5', '6', '7', '8', '', 'q']:
+        while election not in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', 'q']:
             election = input("(q or ENTER) to quit: \n")
         if election == 'q' or election == '':
             print_exit()
