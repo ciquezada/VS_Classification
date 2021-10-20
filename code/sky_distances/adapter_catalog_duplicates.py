@@ -24,7 +24,7 @@ args = vars(ap.parse_args())
 def run_catalog_duplicates(i_args):
     i, args = i_args
     temp_folder, input_file, config_file = args
-    RUN_CODE_STRING = "python catalog_sky_distances.py " # command line
+    RUN_CODE_STRING = "python sky_distances.py " # command line
     RUN_CODE_STRING += f"-i \"{temp_folder}{os.sep}sample_{i}.csv\" " # temp input file
     RUN_CODE_STRING += f"-fc \"{input_file}\" " # features selection
     RUN_CODE_STRING += f"-o \"{temp_folder}{os.sep}output_{i}.csv\" " # temp output file

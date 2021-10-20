@@ -55,7 +55,7 @@ class DuplicatesAdapterParallelTestCase(unittest.TestCase):
 
 class SkyDistancesTestCase(unittest.TestCase):
     def setUp(self):
-        test_string = "python catalog_sky_distances.py "
+        test_string = "python sky_distances.py "
         test_string += f"-i \"{cwd}{os.sep}unittest{os.sep}test_catalog.csv\" "
         test_string += f"-fc \"{cwd}{os.sep}unittest{os.sep}test_catalog.csv\" "
         test_string += f"-o \"{cwd}{os.sep}unittest{os.sep}test_output.csv\" "
@@ -76,6 +76,6 @@ class SkyDistancesTestCase(unittest.TestCase):
     def tearDown(self):
         test_file = "unittest" + os.sep + "test_output.csv"
         os.remove(test_file)
-        
+
 if __name__=="__main__":
     unittest.main()

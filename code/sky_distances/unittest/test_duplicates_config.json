@@ -1,8 +1,8 @@
 {
-  "TEMP_DIR": "..\\catalog_duplicates",
+  "TEMP_DIR": "..\\sky_distances",
   "MAX_SEP [arcsec]": 0.5,
   "MIN_SEP [arcsec]": 0.000000001,
   "FRAME": "galactic",
-  "UNITS": ("deg", "deg"),
+  "UNITS": ["deg", "deg"],
   "DROP_DUPLICATES": true
 }
