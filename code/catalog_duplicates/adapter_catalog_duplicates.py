@@ -8,10 +8,11 @@ import argparse
 import json
 
 cwd = os.path.abspath(f"{os.path.dirname(__file__)}")
+# SI NO SE EJECUTA DESDE LA MISMA CARPETA, DEBE SER CON UN FRONTEND
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--input_catalog", required=True,
-                               help="Input catalog file ['ID', 'long', 'b']")
+                               help="Input catalog file ['ID', 'glon/RA', 'glat/dec'], change frame on config_file")
 ap.add_argument("-o", "--output_duplicates", required=True,
                                help="Output catalog file")
 ap.add_argument("-p", "--processes", default=1, type=int,
@@ -23,7 +24,7 @@ args = vars(ap.parse_args())
 def run_catalog_duplicates(i_args):
     i, args = i_args
     temp_folder, input_file, config_file = args
-    RUN_CODE_STRING = "python catalog_duplicates.py " # command line
+    RUN_CODE_STRING = "python catalog_sky_distances.py " # command line
     RUN_CODE_STRING += f"-i \"{temp_folder}{os.sep}sample_{i}.csv\" " # temp input file
     RUN_CODE_STRING += f"-fc \"{input_file}\" " # features selection
     RUN_CODE_STRING += f"-o \"{temp_folder}{os.sep}output_{i}.csv\" " # temp output file
@@ -52,9 +53,9 @@ if __name__=="__main__":
     with open(config_file, 'r', encoding="utf-8") as infile:
         config_params = json.load(infile)
     temp_dir = config_params["TEMP_DIR"]
-    col_id = config_params["COL_ID"]
     # load var file and then prepare input file
     input_df = pd.read_csv(input_file, delim_whitespace=True)
+    col_id = input_df.columns[0]
     # making needed directories
     temp_folder = f"{temp_dir}{os.sep}temp_0"
     temp_folder = os_mkdir(temp_folder)
